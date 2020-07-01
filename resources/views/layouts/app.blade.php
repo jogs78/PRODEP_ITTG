@@ -43,6 +43,21 @@
 
                     </ul>
 
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tramites">Tramites</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Beneficiarios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Notificaciones</a>
+                        </li>
+                    </ul>
+
+
+
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -84,4 +99,5 @@
         </main>
     </div>
 </body>
+@yield('code')
 </html>

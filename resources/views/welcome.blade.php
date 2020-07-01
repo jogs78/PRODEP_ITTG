@@ -144,7 +144,7 @@ nav {
             <ul>
             @if (Route::has('login'))
                 @auth
-                    <li><a href="{{ route('iniciorol') }}">Inicio</a></li>
+                    <li><a href="{{ route('home') }}">Inicio</a></li>
                 @else
                     <li><a href="{{ route('login') }}">Entrar</a></li>
                     @if (Route::has('register'))

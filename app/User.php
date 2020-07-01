@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'rol'
     ];
 
     /**
@@ -36,4 +36,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+/*
+    public function rol()
+    {
+        return $this->hasOneThrough(
+            'App\Owner',
+            'App\Car',
+            'mechanic_id', // Foreign key on cars table...
+            'car_id', // Foreign key on owners table...
+            'id', // Local key on mechanics table...
+            'id' // Local key on cars table...
+        );
+    }
+*/
 }

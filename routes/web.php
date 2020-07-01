@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -20,3 +24,16 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('tramites','TramitesController');
+//Route::get('/tramites', 'TramitesController@listar_tramites');
+Route::get('/subtramites/{id_tramite}', 'SubtramitesController@index');
+Route::resource('subtramites','SubtramitesController')->except([
+    'index', 'show'
+]);
+
+Route::get('/evidencias/{id_tramite}', 'EvidenciasController@index');
+Route::resource('evidencias','EvidenciasController')->except([
+    'index', 'show'
+]);
+
