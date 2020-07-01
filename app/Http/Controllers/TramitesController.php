@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tramite;
-use App\Models\Tipo_Tramite;
 
 use Illuminate\Http\Request;
 
@@ -58,7 +57,7 @@ class TramitesController extends Controller
             \Session::put('year' ,  $request->input('year') );
         }
         $request->merge( array( 'year' => $year ) );
-        $tramites = Tramite::where('origen', NULL)->where('fecha','>=', "$year-01-01")->where('fecha','<=', "$year-12-31")->orderBy('fecha', 'desc')->paginate(15);//->get();
+        $tramites = Tramite::where('origen', NULL)->where('fecha','>=', "$year-01-01")->where('fecha','<=', "$year-12-31")->orderBy('fecha', 'asc')->paginate(15);//->get();
 //        $tramites = Tramite::paginate(15);//->get();
         return view('Tramites.listar',compact('tramites','year'));
     }
@@ -81,9 +80,18 @@ class TramitesController extends Controller
      */
     public function store(Request $request)
     {
-        $datos = $request->all();
-
-        //
+        try {
+            $tramite = new Tramite();
+            $tramite->fecha = $request->input('fecha'); 
+            $tramite->descripcion = $request->input('descripcion'); 
+            $tramite->save();
+            $t= $tramite->toArray();
+            return response()->json($t,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error"],500) ;
+        }
     }
 
     /**

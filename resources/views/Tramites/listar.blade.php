@@ -19,7 +19,7 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
     </thead>
     <tbody>
       @foreach($tramites as $tramite)
-      <tr>
+      <tr id="{{$tramite->id}}">
         <td>
           {{$tramite->fecha}}    
         </td>
@@ -63,14 +63,13 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
                               </div>
                             </div>
                           </form>
+            </div><!-- modal-body -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
-          </div>
-    </div>
+          </div><!-- modal-content -->
+      </div>
   </div>
-</div>
 
 
 @endsection
@@ -78,29 +77,32 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
 <script>
 $().ready(function(){
     $("#btn_agregar_tramite").click(function(event){
+        descripcion = $("#descripcion").val();
+        if (descripcion=="")
+          alert("Falta especificar una descripcion");
 
-
-        alert($('#tipo_tramite_id').val());
-        return;
-        axios.post('/tramite/'  , {
+        axios.post('/tramites/'  , {
                                     _token:  '{{ csrf_token() }}',
                                     fecha: $("#fecha").val(),
                                     descripcion: $("#descripcion").val(),
                                   })
         .then(function (response) {
-          
-            if (response.data.asistencia == true) 
-                txt = '<p class="text-success">ASISTENCIA</p>';
-            else
-                txt = '<p class="text-danger">FALTA</p>';
-
-            $('div#' + response.data.matriculacion ).html(txt);
-            console.log(response);
+          linea  ='<tr id="' + response.data.id + '"  >';
+          linea +='<td>' + response.data.fecha + '</td>';
+          linea +='<td>' + response.data.descripcion + '</td>';
+          linea +='<td>';
+          linea +='<a href="/subtramites/' + response.data.id + '" class="btn btn-primary">Subtramites</a>';
+          linea +='<a href="#" class="btn btn-danger" >Eliminar</a>';
+          linea +='</td>';
+          linea +='</tr>';
+          $('#lista_tramites  > tbody').append(linea);
+//            $('#lista_estudiantes > tbody > tr#' + id ).remove();
+          console.log(response);
         })
         .catch(function (error) {
             if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
             if(error.response.status==500)alert("Error 500 en el sistema");
-            else alert(error.response.data.error);
+            else alert(error.message);
             console.log(error);
         })   
     });

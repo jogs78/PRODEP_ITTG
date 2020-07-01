@@ -9,7 +9,7 @@ class Tramite extends Model
 {
     
     protected $fillable = [
-        'fecha', 'tipo_tramite_id', 'descripcion', 'origen'
+        'fecha', 'descripcion', 'origen'
      ];
     //
 
