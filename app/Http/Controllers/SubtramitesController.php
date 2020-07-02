@@ -14,7 +14,7 @@ class SubtramitesController extends Controller
      */
     public function index($id_tramite)
     {
-        $tramites = Tramite::where('origen', $id_tramite)->orderBy('fecha', 'desc')->paginate(15);//->get();
+        $tramites = Tramite::where('origen', $id_tramite)->orderBy('fecha', 'asc')->paginate(15);//->get();
         $padre = Tramite::find($id_tramite);
         return view('Tramites.sublistar',compact('tramites','padre'));
     }
@@ -37,7 +37,19 @@ class SubtramitesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $tramite = new Tramite();
+            $tramite->origen = $request->input('origen'); 
+            $tramite->fecha = $request->input('fecha'); 
+            $tramite->descripcion = $request->input('descripcion'); 
+            $tramite->save();
+            $t= $tramite->toArray();
+            return response()->json($t,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error"],500) ;
+        }
     }
 
     /**
@@ -71,7 +83,20 @@ class SubtramitesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $tramite= Tramite::find($id);  
+            $tramite->fill($request->all());
+            $tramite->save();
+            $t= $tramite->toArray();
+            return response()->json($t,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            //if($e->getCode()==23000)  
+                //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error"],500) ;
+        }
+
     }
 
     /**
@@ -82,6 +107,17 @@ class SubtramitesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $tramite= Tramite::find($id);  
+            $t= $tramite->toArray();
+            $tramite->delete();
+            return response()->json($t,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            //if($e->getCode()==23000)  
+                //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error"],500) ;
+        }
     }
 }

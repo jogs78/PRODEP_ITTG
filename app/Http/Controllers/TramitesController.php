@@ -125,7 +125,19 @@ class TramitesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try{
+            $tramite= Tramite::find($id);  
+            $tramite->fill($request->all());
+            $tramite->save();
+            $t= $tramite->toArray();
+            return response()->json($t,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            //if($e->getCode()==23000)  
+                //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error"],500) ;
+        }
     }
 
     /**
@@ -136,6 +148,17 @@ class TramitesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $tramite= Tramite::find($id);  
+            $t= $tramite->toArray();
+            $tramite->delete();
+            return response()->json($t,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            //if($e->getCode()==23000)  
+                //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error"],500) ;
+        }
     }
 }
