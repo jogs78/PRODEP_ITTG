@@ -43,8 +43,9 @@ class TramitesController extends Controller
         else $hays = false;
 
         if( $hayg == false && $hays == false ){
-            $year=2019;
+            $year=2014;
         }
+
         if( $hayg == false && $hays == true  ){
             $year = \Session::get('year');
         }
