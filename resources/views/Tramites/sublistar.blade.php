@@ -4,7 +4,7 @@
 <table class="table" border="1" id="lista_tramites">  
     <thead>
       <tr style="text-align: center;">
-        <th colspan="3">{{$padre->descripcion}} - {{$padre->tipo_tramite->tipo}}</th>
+        <th colspan="3">{{$padre->descripcion}}</th>
       </tr>    
       <tr>
         <th>Fecha</th>
@@ -23,7 +23,7 @@
         </td>
         <td>
           <a href="/evidencias/{{$tramite->id}}" class="btn btn-primary">Evidencias</a>
-          <button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>
+          <button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> 
           <button class="btn btn-warning btn_beneficiarios_tramite">Beneficiarios</button>
         </td>  
     </tr> 
@@ -96,7 +96,7 @@ $().ready(function(){
             linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
             linea +='<td>';
             linea +='<a href="/evidencias/' + response.data.id + '" class="btn btn-primary">Evidencias</a> ';
-            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>';
+            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
             linea +='<button class="btn btn-warning btn_beneficiarios_tramite">Beneficiarios</button>';
             linea +='</td>';
             linea +='</tr>';
@@ -173,7 +173,7 @@ $().ready(function(){
             linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
             linea +='<td>';
             linea +='<a href="/evidencias/' + response.data.id + '" class="btn btn-primary">Evidencias</a> ';
-            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>';
+            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
             linea +='<button class="btn btn-warning btn_beneficiarios_tramite">Beneficiarios</button>';
             linea +='</td>';
             linea +='';

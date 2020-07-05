@@ -90,7 +90,7 @@ class TramitesController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error"],500) ;
+            return response()->json(["Otro error: " . $e->getMessage()],500) ;
         }
     }
 
@@ -136,7 +136,7 @@ class TramitesController extends Controller
                 //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error"],500) ;
+            return response()->json(["Otro error: " . $e->getMessage()],500) ;
         }
     }
 
@@ -158,7 +158,7 @@ class TramitesController extends Controller
                 //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error"],500) ;
+            return response()->json(["Otro error: " . $e->getMessage()],500) ;
         }
     }
 }

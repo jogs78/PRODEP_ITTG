@@ -13,13 +13,9 @@ class Tramite extends Model
      ];
     //
 
-    public function tipo_tramite(){
-        return $this->belongsTo('App\Models\Tipo_Tramite');
-
-    }
-
     public function evidencias(){
-        return $this->belongsToMany('App\Models\Evidencia', 'evidencias_tramites');
+        return $this->hasMany('App\Models\Evidencia','tramite_id','id')->orderBy('documento', 'asc');
+//                return $this->belongsToMany('App\Models\Evidencia', 'evidencias_tramites');
     }
 
     public function beneficiarios(){

@@ -32,8 +32,15 @@ Route::resource('subtramites','SubtramitesController')->except([
     'index', 'show'
 ]);
 
+/*
 Route::get('/evidencias/{id_tramite}', 'EvidenciasController@index');
 Route::resource('evidencias','EvidenciasController')->except([
-    'index', 'show'
+    'index', 'show', 'create', 'edit', 'update'
 ]);
+*/
+Route::post('/s_evidencias/','EvidenciasController@store');
+Route::get('/evidencias/{id_tramite}','EvidenciasController@index');
+Route::put('/evidencias/{id_tramite}','EvidenciasController@update');
+Route::delete('/evidencias/{id_tramite}','EvidenciasController@destroy');
+
 

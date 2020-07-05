@@ -29,7 +29,7 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
         <td>
           <a href="/subtramites/{{$tramite->id}}" class="btn btn-primary">Subtramites</a> 
           <button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>
-          <button class="btn btn-warning btn_beneficiarios_tramite">Beneficiarios</button>
+          <button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-tramite-id="{{$tramite->id}}" data-tramite-nombre="{{$tramite->descripcion}}">Beneficiarios</button>
         </td>
       </tr> 
       @endforeach
@@ -43,91 +43,227 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="false"  data-backdrop="static">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-        <div class="modal-header">
+      <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">AGREGAR TRAMITE</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          </div>
-          <div class="modal-body">
-              <div class="row">
-                <div class="form-group col-12">
-                  Fecha: <input class="form-control"  type="date" name="fecha" id="fecha" value="{{date("Y-m-d")}}">
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-12">
-                  Descripcion: <input class="form-control"  type="text" name="descripcion" id="descripcion" placeholder="Escriba una descripcción">
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-12">
-                  <input class="form-control btn btn-primary" type="button" value="Agregar" id="btn_agregar_tramite">
-                </div>
-              </div>
-            </div><!-- modal-body -->
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
-            </div>
-          </div><!-- modal-content -->
       </div>
-  </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group col-12">
+            Fecha: <input class="form-control"  type="date" name="fecha" id="fecha" value="{{date("Y-m-d")}}">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-12">
+            Descripcion: <input class="form-control"  type="text" name="descripcion" id="descripcion" placeholder="Escriba una descripcción">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-12">
+            <input class="form-control btn btn-primary" type="button" value="Agregar" id="btn_agregar_tramite">
+          </div>
+        </div>
+      </div><!-- modal-body -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div><!-- modal-content -->
+  </div><!-- modal-dialog -->
+</div><!-- modal fade -->
+
+<!-- modal de beneficiarios-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="titulo_del_tramite">Beneficiarios del tramite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hiddens" id="tramite_id" name="tramite_id">
+        <div class="row">
+          <div class="col">
+            <input type="text" class="form-control" placeholder="Nombre">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="Paterno">
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" placeholder="Materno">
+          </div>
+          <div class="col">
+            <input class="form-control btn btn-primary" type="button" value="Buscar">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" style="display: block; position: relative; height: 200px; overflow: auto;" >
+            <table id="tbl-beneficiarios" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th style='width: 5%;' > </th>
+                  <th>NOMBRE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td>
+                    <input type="checkbox" value="" id="defaultCheck1">
+                  </td>
+                  <td>Larry</td>
+                </tr>                  
+                <tr>
+                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Larry</td>
+                </tr>                  
+                <tr>
+                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Larry</td>
+                </tr>                  
+                <tr>
+                  <td><input class="form-check-input" type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td>
+                    3 <input class="" type="checkbox" value="" id="defaultCheck1">
+                  </td>
+                  <td>Larry</td>
+                </tr>                  
+                <tr>
+                  <td><input class="form-check-input" type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td>
+                    3 <input class="" type="checkbox" value="" id="defaultCheck1">
+                  </td>
+                  <td>Larry</td>
+                </tr>                  
+                <tr>
+                  <td><input class="form-check-input" type="checkbox" value="" id="defaultCheck1"></td>
+                  <td>Mark</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Jacob</td>
+                </tr>
+                <tr>
+                  <td>
+                    3 <input class="" type="checkbox" value="" id="defaultCheck1">
+                  </td>
+                  <td>Larry</td>
+                </tr>                  
+              </tbody>
+            </table>
+          </div><!-- class="table-wrapper-scroll-y" -->
+        </div><!-- row -->
+      </div><!--modal-body-->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- modal-content -->
+  </div><!-- modal-dialog -->
+</div><!-- modal fade -->
 @endsection
 @section('code')
 <script>
 var mostrando_input = false;
 $().ready(function(){
-    $("#btn_agregar_tramite").click(function(event){
-        descripcion = $("#descripcion").val();
-        if (descripcion==""){
-          alert("Falta especificar una descripcion");
-          return;
-        }
+  $('#exampleModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var recipient = button.data('tramite-id') // Extract info from data-* attributes
+    var nombret = button.data('tramite-nombre') // Extract info from data-* attributes
+    $('#titulo_del_tramite').text( 'Beneficiarios de: ' +  nombret)
+    $('#tramite_id').val(recipient)
+  });
 
-          axios.post('/tramites/'  , {
-                                      _token:  '{{ csrf_token() }}',
-                                      fecha: $("#fecha").val(),
-                                      descripcion: $("#descripcion").val(),
-                                    })
-          .then(function (response) {
-            linea  ='<tr id="' + response.data.id + '"  >';
-            linea +='<td class="editable editablef">' + response.data.fecha + '</td>';
-            linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
-            linea +='<td>';
-            linea +='<a href="/subtramites/' + response.data.id + '" class="btn btn-primary">Subtramites</a> ';
-            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>';
-            linea +='<button class="btn btn-warning btn_beneficiarios_tramite">Beneficiarios</button>';
-            linea +='</td>';
-            linea +='</tr>';
-            $('#lista_tramites  > tbody').append(linea);
-  //            $('#lista_estudiantes > tbody > tr#' + id ).remove();
-            console.log(response);
-          })
-          .catch(function (error) {
-              if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
-              if(error.response.status==409)alert(error.response.data.error);
-              if(error.response.status==500)alert("Error 500 en el sistema");
-              else alert(error.message);
-              console.log(error);
-          })   
-    });
-    $("#lista_tramites tbody").on("click", ".btn_eliminar_tramite" , function(){
-        id = this.parentElement.parentElement.id;
-        axios.delete('/tramites/' + id , {
-                                          params: {
-                                            _token:  '{{ csrf_token() }}'
-                                          }
-                                          })
-        .then(function (response) {
-            $('#lista_tramites > tbody > tr#' + response.data.id ).remove();
-            console.log(response);
-        })
-        .catch(function (error) {
-            if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
-            if(error.response.status==409)alert(error.response.data.error);
-            if(error.response.status==500)alert("Error 500 en el sistema");
-            else alert(error.message);
-            console.log(error);
-        })   
-    });
+  $("#btn_agregar_tramite").click(function(event){
+    descripcion = $("#descripcion").val();
+    if (descripcion==""){
+      alert("Falta especificar una descripcion");
+      return;
+    }
+    axios.post('/tramites/'  , {
+                                _token:  '{{ csrf_token() }}',
+                                fecha: $("#fecha").val(),
+                                descripcion: $("#descripcion").val(),
+                              })
+    .then(function (response) {
+      linea  ='<tr id="' + response.data.id + '"  >';
+      linea +='<td class="editable editablef">' + response.data.fecha + '</td>';
+      linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
+      linea +='<td>';
+      linea +='<a href="/subtramites/' + response.data.id + '" class="btn btn-primary">Subtramites</a> ';
+      linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
+      linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-tramite-id="' + response.data.id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
+      linea +='</td>';
+
+      linea +='</tr>';
+      $('#lista_tramites  > tbody').append(linea);
+//            $('#lista_estudiantes > tbody > tr#' + id ).remove();
+      console.log(response);
+     })
+    .catch(function (error) {
+        if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
+        if(error.response.status==409)alert(error.response.data.error);
+        if(error.response.status==500)alert("Error 500 en el sistema");
+        else alert(error.message);
+        console.log(error);
+    });   
+  });
+  $("#lista_tramites tbody").on("click", ".btn_eliminar_tramite" , function(){
+    id = this.parentElement.parentElement.id;
+    axios.delete('/tramites/' + id , {
+                                      params: {
+                                        _token:  '{{ csrf_token() }}'
+                                      }
+                                      })
+    .then(function (response) {
+        $('#lista_tramites > tbody > tr#' + response.data.id ).remove();
+        console.log(response);
+    })
+    .catch(function (error) {
+        if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
+        if(error.response.status==409)alert(error.response.data.error);
+        if(error.response.status==500)alert("Error 500 en el sistema");
+        else alert(error.message);
+        console.log(error);
+    })   
+  });
 
     $("#lista_tramites tbody").on("dblclick", ".editablef" , function() {
         if(mostrando_input) return;
@@ -169,8 +305,8 @@ $().ready(function(){
             linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
             linea +='<td>';
             linea +='<a href="/subtramites/' + response.data.id + '" class="btn btn-primary">Subtramites</a> ';
-            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>';
-            linea +='<button class="btn btn-warning btn_beneficiarios_tramite">Beneficiarios</button>';            
+            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
+            linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-tramite-id="' + response.data.id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
             linea +='</td>';
             linea +='';
 //            $('#lista_tramites > tbody > tr#' + id ).remove();
