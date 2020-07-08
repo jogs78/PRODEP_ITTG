@@ -5,6 +5,11 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
+use App\Models\Tramite;
+use App\Models\Evidencia;
+use App\Policies\SubtramitesPolicy;
+use App\Policies\EvidenciasPolicy;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -14,6 +19,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Models\Tramite' => 'App\Policies\SubtramitesPolicy',
+        'App\Models\Evidencia' => 'App\Policies\EvidenciasPolicy',
+        //    Tramite::class => SubtramitesPolicy::class,
     ];
 
     /**

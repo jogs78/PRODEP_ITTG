@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tramite;
+use App\Models\Concesion;
 use Illuminate\Http\Request;
 
 class SubtramitesController extends Controller
@@ -120,4 +121,48 @@ class SubtramitesController extends Controller
             return response()->json(["Otro error: " . $e->getMessage()],500) ;
         }
     }
+    public function beneficiarios(Request $request){
+        try {
+            //$campos = $request->all();
+            $tramite= Tramite::find($request->input('tramite_id'));  
+            if($tramite==null) return response()->json(["error"=>"Tramite no encontrado"],404) ;
+            $t= $tramite->permisos($request->input('nombre'),$request->input('paterno'),$request->input('materno'));
+            return response()->json($t,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+        }
+    }
+    public function conceder(Request $request){
+        try {
+
+            $concesion = Concesion::where('concesionado_id' , $request->input('concesionado_id'))
+            ->where('concesionado_type' , 'App\Models\Tramite')
+            ->where('user_id' , $request->input('user_id') )
+            ->get()->count();
+
+            if($concesion==0){
+                $accion="poner";
+                $concesion = Concesion::Create(
+                    ['concesionado_id' => $request->input('concesionado_id'),
+                     'concesionado_type' => 'App\Models\Tramite',
+                     'user_id' => $request->input('user_id')]
+                );    
+            }else{
+                $accion="quitar";
+                Concesion::where('concesionado_id' , $request->input('concesionado_id'))
+                ->where('concesionado_type' , 'App\Models\Tramite')
+                ->where('user_id' , $request->input('user_id') )
+                ->delete();
+            }
+
+            return response()->json("$accion",200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+        }
+    }
+
 }

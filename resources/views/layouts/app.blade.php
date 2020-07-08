@@ -44,7 +44,7 @@
                     <ul class="navbar-nav mr-auto">
 
                     </ul>
-
+                    @auth
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto ">
                         <li class="nav-item ">
@@ -56,7 +56,8 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#">Notificaciones</a>
                         </li>
-                    </ul>
+                    </ul>                        
+                    @endauth
 
 
 

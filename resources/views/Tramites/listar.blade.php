@@ -28,8 +28,14 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
         </td>
         <td>
           <a href="/subtramites/{{$tramite->id}}" class="btn btn-primary">Subtramites</a> 
-          <button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>
-          <button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-tramite-id="{{$tramite->id}}" data-tramite-nombre="{{$tramite->descripcion}}">Beneficiarios</button>
+          @can('delete', $tramite)
+          <button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>            
+          @endcan
+
+          @can('asignar',  App\Models\Tramite::class)
+            <button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-tramite-id="{{$tramite->id}}" data-tramite-nombre="{{$tramite->descripcion}}">Beneficiarios</button>
+          @endcan
+
         </td>
       </tr> 
       @endforeach
@@ -37,9 +43,13 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
     </tbody>
   </table> 
   {{--$tramites->links()--}}
+
+  <!-- Large modal -->
+  @can('create', App\Models\Tramite::class)
+  <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg" id="matricular">AGREGAR TRAMITE</button>
+  @endcan
   
-<!-- Large modal -->
-<button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg" id="matricular">AGREGAR TRAMITE</button>
+
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="false"  data-backdrop="static">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -82,19 +92,19 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
         </button>
       </div>
       <div class="modal-body">
-        <input type="hiddens" id="tramite_id" name="tramite_id">
+        <input type="hidden" id="tramite_id" name="tramite_id">
         <div class="row">
           <div class="col">
-            <input type="text" class="form-control" placeholder="Nombre">
+            <input type="text" class="form-control" id="_nombre" placeholder="Nombre">
           </div>
           <div class="col">
-            <input type="text" class="form-control" placeholder="Paterno">
+            <input type="text" class="form-control" id="_paterno" placeholder="Paterno">
           </div>
           <div class="col">
-            <input type="text" class="form-control" placeholder="Materno">
+            <input type="text" class="form-control" id="_materno" placeholder="Materno">
           </div>
           <div class="col">
-            <input class="form-control btn btn-primary" type="button" value="Buscar">
+            <input class="form-control btn btn-primary" id="btnbuscar" type="button" value="Filtrar...">
           </div>
         </div>
         <div class="row">
@@ -108,85 +118,16 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Mark</td>
+                  <td colspan="2">SIN RESULTADOS</td>
                 </tr>
-                <tr>
-                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Jacob</td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" value="" id="defaultCheck1">
-                  </td>
-                  <td>Larry</td>
-                </tr>                  
-                <tr>
-                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Jacob</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Larry</td>
-                </tr>                  
-                <tr>
-                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Jacob</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Larry</td>
-                </tr>                  
-                <tr>
-                  <td><input class="form-check-input" type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                </tr>
+{{-- 
                 <tr>
                   <td>
                     3 <input class="" type="checkbox" value="" id="defaultCheck1">
                   </td>
                   <td>Larry</td>
                 </tr>                  
-                <tr>
-                  <td><input class="form-check-input" type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                </tr>
-                <tr>
-                  <td>
-                    3 <input class="" type="checkbox" value="" id="defaultCheck1">
-                  </td>
-                  <td>Larry</td>
-                </tr>                  
-                <tr>
-                  <td><input class="form-check-input" type="checkbox" value="" id="defaultCheck1"></td>
-                  <td>Mark</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                </tr>
-                <tr>
-                  <td>
-                    3 <input class="" type="checkbox" value="" id="defaultCheck1">
-                  </td>
-                  <td>Larry</td>
-                </tr>                  
+--}}
               </tbody>
             </table>
           </div><!-- class="table-wrapper-scroll-y" -->
@@ -207,8 +148,42 @@ $().ready(function(){
     var button = $(event.relatedTarget) // Button that triggered the modal
     var recipient = button.data('tramite-id') // Extract info from data-* attributes
     var nombret = button.data('tramite-nombre') // Extract info from data-* attributes
-    $('#titulo_del_tramite').text( 'Beneficiarios de: ' +  nombret)
+    $('#titulo_del_tramite').text( 'Beneficiarios del tramite:  ' +  nombret)
     $('#tramite_id').val(recipient)
+  });
+
+  $("#btnbuscar").click(function(event){
+    $('#btnbuscar').attr("disabled", true);
+    axios.post('/tramites/beneficiarios'  , {
+                                _token:  '{{ csrf_token() }}',
+                                tramite_id: $("#tramite_id").val(),
+                                nombre: $("#_nombre").val(),
+                                paterno: $("#_paterno").val(),
+                                materno: $("#_materno").val(),
+                              })
+                                                     
+    .then(function (response) {
+      $('#tbl-beneficiarios tbody').empty();
+      for (let i = 0; i < response.data.length; i++) {
+        linea  = '<tr>';
+        linea +='<td><input class="conceder" type="checkbox" ' + response.data[i].checked + ' id="' + response.data[i].id + '"></td>';
+        linea +='<td>' + response.data[i].usuario + '</td>';
+        linea +='</tr>';
+        $('#tbl-beneficiarios  > tbody').append(linea);
+        $('#btnbuscar').attr("disabled", false);
+
+      }
+      console.log(response);
+     })
+    .catch(function (error) {
+      if(error.response.status==401){alert("Usted no ha iniciado en el sistema");return;}
+      if(error.response.status==404){alert(error.response.data.error);return;}
+      if(error.response.status==409){alert(error.response.data.error);return;}
+      if(error.response.status==500){alert("Error 500 en el sistema");return;}
+      alert(error.message);
+        console.log(error);
+    });
+    
   });
 
   $("#btn_agregar_tramite").click(function(event){
@@ -245,6 +220,27 @@ $().ready(function(){
         console.log(error);
     });   
   });
+
+  $('#tbl-beneficiarios tbody').on("click", ".conceder" , function(){
+    axios.put('/tramites/beneficiarios'  , {
+                                _token:  '{{ csrf_token() }}',
+                                concesionado_id: $("#tramite_id").val(),
+                                user_id: this.id,
+                              })
+    .then(function (response) {
+      console.log(response);
+     })
+    .catch(function (error) {
+      if(error.response.status==401){alert("Usted no ha iniciado en el sistema");return;}
+      if(error.response.status==404){alert(error.response.data.error);return;}
+      if(error.response.status==409){alert(error.response.data.error);return;}
+      if(error.response.status==500){alert("Error 500 en el sistema");return;}
+      alert(error.message);
+        console.log(error);
+    });
+  });
+
+  
   $("#lista_tramites tbody").on("click", ".btn_eliminar_tramite" , function(){
     id = this.parentElement.parentElement.id;
     axios.delete('/tramites/' + id , {
@@ -298,7 +294,7 @@ $().ready(function(){
             params.append('descripcion', $("#_descripcion").val());
           }
 
-          axios.put('/tramites/' + this.parentElement.id  , params )
+          axios.put('/tramites/beneficiarios' + this.parentElement.id  , params )
           .then(function (response) {
             linea  ='';
             linea +='<td class="editable editablef">' + response.data.fecha + '</td>';

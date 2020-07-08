@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tramite;
 use App\Models\Evidencia;
+use App\Models\Concesion;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Storage;
@@ -117,23 +118,76 @@ class EvidenciasController extends Controller
     public function destroy($id)
     {
         try {
-
+            DB::beginTransaction();
             $evidencia = Evidencia::find($id);
             $fileName = $evidencia->documento;
 
             if (Storage::disk('local')->exists($fileName) ) {
                 Storage::disk('local')->delete($fileName) ;
             }else return response()->json(["error"=>"Evidencia no encontrada "],404) ;
-    
+            Concesion::where(concesionado_id,$id)->where(concesionado_type,"App\Models\Evidencia")->delete();
             $e= $evidencia->toArray();
             $evidencia->delete();
+            DB::commit();
             return response()->json($e,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            DB::rollback();
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            DB::rollback();
+            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+        }
+    }
+
+    public function beneficiarios(Request $request){
+        try {
+/*            $tramite = Tramite::find($request->input('subtramite_id'));  
+            if($tramite==null) return response()->json(["error"=>"Tramite para esta evidencia no encontrado"],404) ;
+            $t= $tramite->permisos($request->input('nombre'),$request->input('paterno'),$request->input('materno'));
+*/
+            $evidencia= Evidencia::find($request->input('evidencia_id'));  
+            if($evidencia==null) return response()->json(["error"=>"Evidencia no encontrada"],404) ;
+            $t= $evidencia->permisos($request->input('nombre'),$request->input('paterno'),$request->input('materno'),$request->input('subtramite_id'));
+
+            return response()->json($t,200) ;
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
             return response()->json(["Otro error: " . $e->getMessage()],500) ;
         }
     }
+    public function conceder(Request $request){
+        try {
+
+            $concesion = Concesion::where('concesionado_id' , $request->input('concesionado_id'))
+            ->where('concesionado_type' , 'App\Models\Evidencia')
+            ->where('user_id' , $request->input('user_id') )
+            ->get()->count();
+
+            if($concesion==0){
+                $accion="poner";
+                $concesion = Concesion::Create(
+                    ['concesionado_id' => $request->input('concesionado_id'),
+                     'concesionado_type' => 'App\Models\Evidencia',
+                     'user_id' => $request->input('user_id')]
+                );    
+            }else{
+                $accion="quitar";
+                Concesion::where('concesionado_id' , $request->input('concesionado_id'))
+                ->where('concesionado_type' , 'App\Models\Evidencia')
+                ->where('user_id' , $request->input('user_id') )
+                ->delete();
+            }
+
+            return response()->json("$accion",200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+        }
+    }
+
+
 }
 
 /*
