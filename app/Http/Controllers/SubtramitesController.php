@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tramite;
 use App\Models\Concesion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SubtramitesController extends Controller
 {
@@ -49,7 +50,7 @@ class SubtramitesController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
 
@@ -95,7 +96,7 @@ class SubtramitesController extends Controller
                 //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
 
     }
@@ -118,7 +119,7 @@ class SubtramitesController extends Controller
                 //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;    
         }
     }
     public function beneficiarios(Request $request){
@@ -131,7 +132,7 @@ class SubtramitesController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
     public function conceder(Request $request){
@@ -161,7 +162,45 @@ class SubtramitesController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
+        }
+    }
+
+    public function privatizar(Request $request){
+        try {
+            DB::beginTransaction();
+            Concesion::where('concesionado_id' , $request->input('concesionado_id'))
+                ->where('concesionado_type' , 'App\Models\Tramite')
+                ->delete();
+            DB::commit();
+            return response()->json( ['concesionado_id'=>$request->input('concesionado_id') ]  ,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            DB::rollback();
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            DB::rollback();
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
+        }
+    }
+    public function publicar(Request $request){
+        try {
+            DB::beginTransaction();
+            Concesion::where('concesionado_id' , $request->input('concesionado_id'))
+                ->where('concesionado_type' , 'App\Models\Tramite')
+                ->delete();
+            $concesion = Concesion::Create(
+                ['concesionado_id' => $request->input('concesionado_id'),
+                    'concesionado_type' => 'App\Models\Tramite',
+                    'user_id' => -1]
+            );    
+            DB::commit();
+            return response()->json( $concesion->toArray()  ,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            DB::rollback();
+            return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
+        }catch (\Exception $e){
+            DB::rollback();
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
 

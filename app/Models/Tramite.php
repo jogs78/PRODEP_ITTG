@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Models\Concesion;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +38,9 @@ class Tramite extends Model
         $sql = "SELECT id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as usuario FROM users WHERE id in (select user_id from concesiones where concesionado_type like '%Tramite' and concesionado_id = " . $this->id . " ) order by usuario";
         $a = DB::select(DB::raw($sql));
         return $a;
+    }
+    public function publico(){
+        return Concesion::where('user_id', '=', -1)->where('concesionado_type', '=', "App\Models\Tramite")->where('concesionado_id', '=', $this->id )->exists();
     }
         
 }

@@ -28,7 +28,9 @@
             @endcan
 
             @can('asignar', App\Models\Evidencia::class)
-              <button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="{{$evidencia->id}}" data-evidencia-nombre="{{$evidencia->descripcion}}" data-subtramite-id="{{$subtramite->id}}">Beneficiarios</button>              
+              @if (!$evidencia->publica())
+                <button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="{{$evidencia->id}}" data-evidencia-nombre="{{$evidencia->descripcion}}" data-subtramite-id="{{$subtramite->id}}">Beneficiarios</button>
+              @endif
             @endcan
           </td>  
         </tr> 
@@ -278,11 +280,9 @@ $().ready(function(){
             console.log(response);
           })
           .catch(function (error) {
-              if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
-              if(error.response.status==409)alert(error.response.data.error);
-              if(error.response.status==500)alert("Error 500 en el sistema");
-              else alert(error.message);
-              console.log(error);
+            alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+            console.log(error);
+            console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
           })   
     });
 
@@ -297,12 +297,9 @@ $().ready(function(){
       console.log(response);
      })
     .catch(function (error) {
-      if(error.response.status==401){alert("Usted no ha iniciado en el sistema");return;}
-      if(error.response.status==404){alert(error.response.data.error);return;}
-      if(error.response.status==409){alert(error.response.data.error);return;}
-      if(error.response.status==500){alert("Error 500 en el sistema");return;}
-      alert(error.message);
-        console.log(error);
+      alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+      console.log(error);
+      console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
     });
   });
 
@@ -322,12 +319,9 @@ $().ready(function(){
 
           })
         .catch(function (error) {
-            if(error.response.status==401){alert("Usted no ha iniciado en el sistema");return;}
-            if(error.response.status==404){alert(error.response.data.error);return;}
-            if(error.response.status==409){alert(error.response.data.error);return;}
-            if(error.response.status==500){alert("Error 500 en el sistema");return;}
-            alert(error.message);
-            console.log(error);
+          alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+          console.log(error);
+          console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
         })   
     });
 
@@ -367,11 +361,9 @@ $().ready(function(){
             console.log(response);
           })
           .catch(function (error) {
-              if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
-              if(error.response.status==409)alert(error.response.data.error);
-              if(error.response.status==500)alert("Error 500 en el sistema");
-              else alert(error.message);
-              console.log(error);
+            alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+            console.log(error);
+            console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
           });
 
           mostrando_input = false;

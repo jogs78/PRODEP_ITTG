@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use App\Models\Concesion;
+use App\Models\Tramite;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -28,5 +30,7 @@ class Evidencia extends Model
         $a = DB::select(DB::raw($sql));
         return $a;
     }
-
+    public function publica(){
+        return Tramite::find($this->tramite_id)->publico();
+    }
 }

@@ -13,7 +13,7 @@
     <tr>
       <th>Fecha</th>
       <th>Descripcion</th>
-      <th>Acción</th>
+      <th>Opciones</th>
     </tr>
   </thead>
   <tbody>
@@ -26,14 +26,26 @@
         <td class="editable editabled">
           {{$tramite->descripcion}}
         </td>
-        <td>
+        <td class="opciones">
           <a href="/evidencias/{{$tramite->id}}" class="btn btn-primary">Evidencias</a>
           @can('delete', $tramite)
           <button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>             
           @endcan
 
           @can('asignar',  App\Models\Tramite::class)
-            <button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-tramite-id="{{$tramite->id}}" data-tramite-nombre="{{$tramite->descripcion}}">Beneficiarios</button> 
+            @if ($tramite->publico())
+              <button type="button" class="btn btn-warning privatizar" id="{{$tramite->id}}">Privatizar</button>
+            @else
+              <div class="btn-group">
+                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Permisos
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" data-tramite-id="{{$tramite->id}}" data-tramite-nombre="{{$tramite->descripcion}}">Beneficiarios</a>
+                  <a class="dropdown-item publicar" id="{{$tramite->id}}" href="#">Tramite Público</a>
+                </div>
+              </div>
+            @endif
           @endcan
         </td>  
       </tr> 
@@ -174,12 +186,9 @@ $().ready(function(){
       console.log(response);
      })
     .catch(function (error) {
-      if(error.response.status==401){alert("Usted no ha iniciado en el sistema");return;}
-      if(error.response.status==404){alert(error.response.data.error);return;}
-      if(error.response.status==409){alert(error.response.data.error);return;}
-      if(error.response.status==500){alert("Error 500 en el sistema");return;}
-      alert(error.message);
-        console.log(error);
+      alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+      console.log(error);
+      console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
     });
     
   });
@@ -203,10 +212,18 @@ $().ready(function(){
             linea  ='<tr id="' + response.data.id + '"  >';
             linea +='<td class="editable editablef">' + response.data.fecha + '</td>';
             linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
-            linea +='<td>';
+            linea +='<td class="opciones">';
             linea +='<a href="/evidencias/' + response.data.id + '" class="btn btn-primary">Evidencias</a> ';
-            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';            
-            linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-tramite-id="' + response.data.id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
+            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
+
+            linea +='<div class="btn-group">';
+            linea +='  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Permisos</button>';
+            linea +='<div class="dropdown-menu">';
+            linea +='<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" data-tramite-id="' + response.data.id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</a>';
+            linea +='<a class="dropdown-item publicar" id="' + response.data.id + '" href="#">Tramite Público</a>';
+            linea +='</div>';
+            linea +='</div>';
+
             linea +='</td>';
             linea +='</tr>';
             $('#lista_tramites  > tbody').append(linea);
@@ -214,13 +231,66 @@ $().ready(function(){
             console.log(response);
           })
           .catch(function (error) {
-              if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
-              if(error.response.status==409)alert(error.response.data.error);
-              if(error.response.status==500)alert("Error 500 en el sistema");
-              else alert(error.message);
-              console.log(error);
+            alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+            console.log(error);
+            console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
           })   
     });
+
+    
+    $('#lista_tramites tbody').on("click", ".privatizar" , function(event){
+
+      event.preventDefault();
+      axios.put('/subtramites/privatizar'  , {
+                                _token:  '{{ csrf_token() }}',
+                                concesionado_id: this.id,
+                              })
+    .then(function (response) {
+      linea  ='<a href="/evidencias/' + response.data.concesionado_id + '" class="btn btn-primary">Evidencias</a> ';
+      linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
+
+      linea +='<div class="btn-group">';
+      linea +='  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Permisos</button>';
+      linea +='<div class="dropdown-menu">';
+      linea +='<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" data-tramite-id="' + response.data.concesionado_id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</a>';
+      linea +='<a class="dropdown-item publicar" id="' + response.data.concesionado_id + '" href="#">Tramite Público</a>';
+      linea +='</div>';
+      linea +='</div>';
+
+      lopciones = $('#lista_tramites > tbody > tr#' + response.data.concesionado_id + ' > td.opciones');
+      $('#lista_tramites > tbody > tr#' + response.data.concesionado_id + ' > td.opciones').html(linea);
+      console.log(response);
+    })
+    .catch(function (error) {
+      alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+      console.log(error);
+      console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+    });
+      alert('Este tramite se ha echo privado, especifique los beneficiarios.');
+    });
+
+    $('#lista_tramites tbody').on("click", ".publicar" , function(event){
+      event.preventDefault();
+      axios.put('/subtramites/publicar'  , {
+                                _token:  '{{ csrf_token() }}',
+                                concesionado_id: this.id,
+                              })
+    .then(function (response) {
+      btns ='<a href="/evidencias/' + response.data.concesionado_id + '" class="btn btn-primary">Evidencias</a> ';
+      btns +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
+      btns +='<button type="button" class="btn btn-warning privatizar" id="' + response.data.concesionado_id + '">Privatizar</button>';
+      lopciones = $('#lista_tramites > tbody > tr#' + response.data.concesionado_id + ' > td.opciones');
+      $('#lista_tramites > tbody > tr#' + response.data.concesionado_id + ' > td.opciones').html(btns);
+      console.log(response);
+     })
+    .catch(function (error) {
+      alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+      console.log(error);
+      console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+    });
+      alert('Este tramite se ha echo público');
+    });
+    
     $('#tbl-beneficiarios tbody').on("click", ".conceder" , function(){
     axios.put('/subtramites/beneficiarios'  , {
                                 _token:  '{{ csrf_token() }}',
@@ -231,12 +301,9 @@ $().ready(function(){
       console.log(response);
      })
     .catch(function (error) {
-      if(error.response.status==401){alert("Usted no ha iniciado en el sistema");return;}
-      if(error.response.status==404){alert(error.response.data.error);return;}
-      if(error.response.status==409){alert(error.response.data.error);return;}
-      if(error.response.status==500){alert("Error 500 en el sistema");return;}
-      alert(error.message);
-        console.log(error);
+      alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+      console.log(error);
+      console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
     });
   });
 
@@ -252,11 +319,9 @@ $().ready(function(){
             console.log(response);
         })
         .catch(function (error) {
-            if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
-            if(error.response.status==409)alert(error.response.data.error);
-            if(error.response.status==500)alert("Error 500 en el sistema");
-            else alert(error.message);
-            console.log(error);
+          alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+          console.log(error);
+          console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
         })   
     });
 
@@ -292,29 +357,17 @@ $().ready(function(){
           }else{
             params.append('descripcion', $("#_descripcion").val());
           }
-//          $('#lista_tramites > tbody > tr#' + this.parentElement.id ).remove();
 
           axios.put('/subtramites/' + this.parentElement.id  , params )
           .then(function (response) {
-            linea  ='';
-            linea +='<td class="editable editablef">' + response.data.fecha + '</td>';
-            linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
-            linea +='<td>';
-            linea +='<a href="/evidencias/' + response.data.id + '" class="btn btn-primary">Evidencias</a> ';
-            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
-            linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-tramite-id="' + response.data.id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
-            linea +='</td>';
-            linea +='';
-//            $('#lista_tramites > tbody > tr#' + id ).remove();
-            $('#lista_tramites > tbody > tr#' + response.data.id).html(linea);
+            $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editablef').text(response.data.fecha);
+            $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editabled').text(response.data.descripcion);
             console.log(response);
           })
           .catch(function (error) {
-              if(error.response.status==401)alert("Usted no ha iniciado en el sistema");
-              if(error.response.status==409)alert(error.response.data.error);
-              if(error.response.status==500)alert("Error 500 en el sistema");
-              else alert(error.message);
-              console.log(error);
+            alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+            console.log(error);
+            console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
           });
 
           mostrando_input = false;

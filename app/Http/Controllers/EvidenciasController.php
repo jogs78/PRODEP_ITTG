@@ -60,7 +60,7 @@ class EvidenciasController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
 
@@ -104,7 +104,7 @@ class EvidenciasController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
 
     }
@@ -135,7 +135,7 @@ class EvidenciasController extends Controller
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
             DB::rollback();
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
 
@@ -153,7 +153,7 @@ class EvidenciasController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
     public function conceder(Request $request){
@@ -183,7 +183,7 @@ class EvidenciasController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
 

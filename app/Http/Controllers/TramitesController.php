@@ -44,7 +44,7 @@ class TramitesController extends Controller
         else $hays = false;
 
         if( $hayg == false && $hays == false ){
-            $year=2014;
+            $year=2016;
         }
 
         if( $hayg == false && $hays == true  ){
@@ -92,7 +92,7 @@ class TramitesController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
 
@@ -138,7 +138,7 @@ class TramitesController extends Controller
                 //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
 
@@ -160,7 +160,7 @@ class TramitesController extends Controller
                 //return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
 
@@ -174,7 +174,7 @@ class TramitesController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
     public function conceder(Request $request){
@@ -204,7 +204,7 @@ class TramitesController extends Controller
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
         }catch (\Exception $e){
-            return response()->json(["Otro error: " . $e->getMessage()],500) ;
+            return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
     
