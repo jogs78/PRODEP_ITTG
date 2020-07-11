@@ -58,4 +58,5 @@ Route::get('/evidencias/{id_tramite}','EvidenciasController@index');
 Route::put('/evidencias/{id_tramite}','EvidenciasController@update');
 Route::delete('/evidencias/{id_tramite}','EvidenciasController@destroy');
 
+Route::resource('beneficiarios','BeneficiariosController');
 

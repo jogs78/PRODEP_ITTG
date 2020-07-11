@@ -1,239 +1,157 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <title>PRODEP-ITTG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+
+    <script src="/js/popper.js"></script>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
-<style type="text/css">
-    
-h1 {
-    font-size: 2.3em;
-    line-height: 1.3em;
-    margin: 15px 0;
-    text-align: center;
-    font-weight: 300;
-}
+<body>    
+    <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark"  >
+        <div class="container">
+            <a class="navbar-brand  text-white" href="{{ url('/') }}">
+                {{ config('app.name', 'Laravel') }}
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('messages.Toggle') }}">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-p {
-    margin: 0 0 1.5em 0;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-#main-header {
-/*    background: #333;*/
-    background: #000;
-    color: white;
-    height: 10px;
-}   
-    #main-header a {
-        color: white;
-    }
- 
-/*
- * Logo
- */
-#logo-header {
-    float: left;
-    padding: 15px 0 0 20px;
-    text-decoration: none;
-}
-    #logo-header:hover {
-        color: #0b76a6;
-    }
-    
-    #logo-header .site-name {
-        display: block;
-        font-weight: 700;
-        font-size: 1.2em;
-    }
-    
-    #logo-header .site-desc {
-        display: block;
-        font-weight: 300;
-        font-size: 0.8em;
-        color: #999;
-    }
-    
- 
-/*
- * Navegación
- */
-nav {
-    float: right;
-}
-    nav ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        padding-right: 20px;
-    }
-    
-        nav ul li {
-            display: inline-block;
-            line-height: 50px;
-        }
-            
-            nav ul li a {
-                display: block;
-                padding: 0 10px;
-                text-decoration: none;
-            }
-            
-                nav ul li a:hover {
-                    background: #0b76a6;
-                }
-                #main-content {
-    background: white;
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
-    box-shadow: 0 0 10px rgba(0,0,0,.1);
-}
-
-    #main-content header,
-    #main-content .content {
-        padding: 10px;
-    }
-    #main-footer {
-/*    background: #777;*/
-background: #000;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-}
-    #main-footer p {
-        margin: 0;
-    }
-    
-    #main-footer a {
-        color: white;
-    }
-    #main-header {
-/*    background: #777;*/
-background: #000;
-    color: white;
-    height: 50px;
-    
-    width: 100%;
-    left: 0; 
-    top: 0; 
-    position: fixed; 
-}body {
-    margin: 0;
-    padding: 0;
-    font-family: Helvetica, Arial, sans-serif;
-    color: #666;
-    background: #f2f2f2; 
-    font-size: 1em;
-    line-height: 1.5em;
-    padding-top: 80px;
-}
-</style>
-<body>
-    
-    <header id="main-header">
-        
-        <a id="logo-header" href="#">
-            
-        </a> <!-- / #logo-header -->
-        {{--
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarMainCollapse">
-                        <span class="sr-only">Interruptor de Navegación</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span><span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="https://www.gob.mx/"><img src="https://framework-gb.cdn.gob.mx/landing/img/logoheader.svg" width="128" height="48" alt="Página de inicio, Gobierno de México"></a>
-                </div>
-                <div class="collapse navbar-collapse" id="navbarMainCollapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="https://www.gob.mx/tramites">Trámites</a></li>
-                        <li><a href="https://www.gob.mx/gobierno">Gobierno</a></li>
-                        <li><a href="https://www.gob.mx/busqueda"><span class="sr-only">Búsqueda</span><i class="icon-search"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        --}}
-        <nav>
-            <ul>
-<!--
-                <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#preguntas">Preguntas</a></li>
--->
-            @if (Route::has('login'))    
-                    @auth
-                        <li><a href="{{ route('home') }}">Inicio</a></li>
-                    @else
-                        <li><a href="{{ route('login') }}">{{__('auth.Login')}}</a></li>
-
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Right Side Of Navbar -->
+                <ul class="navbar-nav ml-auto">
+                        @auth
+                        <li class="nav-item">
+                            <a  class="nav-link text-white" href="{{ route('home') }}">Inicio</a>
+                        </li>
+                        @endauth
+                        @guest
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ route('login') }}">{{ __('auth.Login') }}</a>
+                        </li>
                         @if (Route::has('register'))
-                            <li><a href="{{ route('register') }}">{{__('auth.Register')}}</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link  text-white" href="{{ route('register') }}">{{ __('auth.Register') }}</a>
+                            </li>
                         @endif
-                    @endauth
-            @endif
-            </ul>
-        </nav>
-    </header>
- 
-       
-           
-                <img src="img/PRODEP.png" style="width: 25%;margin-left:  35%;">
-                <img src="img/ittg.png"style="width: 10%; height:10%; margin-left: 2%;">
+                    @else
+                        <li class="nav-item dropdown ">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
 
-    
-    
-    <section id="main-content">
-        <article>            
-            <div class="content" id="inicio">
-                <h1>Inicio</h1>
-                <h3>PROGRAMA PARA EL DESARROLLO PROFESIONAL DOCENTE PARA EL TIPO SUPERIOR</h3>
-                <p>
-                    Sitio del la DIRECCION DE SUPERACION ACADEMICA: <a href="http://dsa.sep.gob.mx" target="_blank" rel="noopener noreferrer">http://dsa.sep.gob.mx</a><br>
-                    Sitio de PRODEP A NIVEL SUPERIOR: <a href="http://www.dgesu.ses.sep.gob.mx/PRODEP.htm" target="_blank" rel="noopener noreferrer">http://www.dgesu.ses.sep.gob.mx/PRODEP.htm</a><br>
-                    Sitio de PRODEP PARA TODOS LOS TECS: <a href="http://prodep-tnm.ittg.mx" target="_blank" rel="noopener noreferrer">http://prodep-tnm.ittg.mx</a><br>
-                    Sitio de prodep del ITTG: <a href="http://prodep.ittg.mx" target="_blank" rel="noopener noreferrer">http://prodep.ittg.mx</a><br>
-                </p>
-                {{--
-                    <p>Tenemos {{$contador}} beneficiarios registrados </p>
-                <p>{{$contadorptc}} PTC {{$contadordeseable}} con Perfil deseable</p>
-                <p>y {{$contadorCA}} cuerpos académicos reconocidos</p>
-                --}}
-            </div>
-        </article>
-    </section>
-    <section id="main-content">
-        <article>
-            <div class="content" id="preguntas">
-                <h1>Preguntas frecuentes</h1>              
-                <p>
-                    VOY A PRESENTAR UNA SOLICITUD DE RECONOCIMIENTO AL PERFIL PRODEP, ¿QUE SE REVISA?<br>
-                    Cuando un profesor realiza una nueva solicitud el sistema le imprime una Ficha de recepción, ésta es revisada por el RIP, se busca que se cuente con las evidencias de cada una de las cosas que se enlistan en ésta.<br>
-                    QUIERO COMPRAR PERO ME PIDEN UNA FICHA DE RECEPCION<br>
-                    Para los profesores que reciben apoyo económico aparte del reconocmiento, en la FICHA en la última hoja se especifica  la distribución del dinero, los rubos y monto solicitado, si usted no esta de acuerdo es posible solicitar a la DSA una redistribución, en el menú "Solicitudes de apoyo"en la opcion "Estado de la solicitud" puede re imprimir su ficha de recepción.<br>
-                    ¿EN QUE MOMENTO SE DAN DE ALTA O MODIFICAN LOS CUERPOS  ACADEMICOS?<br>
-                    Depende del cronograma que envien, pero generalmente es a mediados de año.
-                </p>
-            </div>
-        </article>
-    </section>
-    <section id="main-content">
-        <article style="text-align: center;">
-            <p>
-                 Consulte el manual de usuario<br>
-                 <a href="Manual-de-usuario.pdf" target="_blank"><input type="image" src="img/formapdf.png"></a>
-            </p>         
-         </article>   
-        </section>  
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                    {{ __('auth.Logout') }}
+                                </a>
 
-    <footer id="main-footer">
-        <p>@2019 PRODEP-ITTG</p>
-    </footer> <!-- / #main-footer -->
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
+                    @endguest
+                </ul>
+            </div>
+        </div>
+    </nav>
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <br>
+    <img src="img/PRODEP.png" style="width: 25%;margin-left:  35%;">
+    <img src="img/ittg.png"style="width: 10%; height:10%; margin-left: 2%;">
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="card" id="inicio">
+        <div class="card-header text-center">
+            PROGRAMA PARA EL DESARROLLO PROFESIONAL DOCENTE PARA EL TIPO SUPERIOR
+        </div>
+        <div class="card-body">
+                Sitio del la DIRECCION DE SUPERACION ACADEMICA: <a href="http://dsa.sep.gob.mx" target="_blank" rel="noopener noreferrer">http://dsa.sep.gob.mx</a><br>
+                Sitio de PRODEP A NIVEL SUPERIOR: <a href="http://www.dgesu.ses.sep.gob.mx/PRODEP.htm" target="_blank" rel="noopener noreferrer">http://www.dgesu.ses.sep.gob.mx/PRODEP.htm</a><br>
+                Sitio de PRODEP PARA TODOS LOS TECS: <a href="http://prodep-tnm.ittg.mx" target="_blank" rel="noopener noreferrer">http://prodep-tnm.ittg.mx</a><br>
+                Sitio de prodep del ITTG: <a href="http://prodep.ittg.mx" target="_blank" rel="noopener noreferrer">http://prodep.ittg.mx</a><br>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header text-center">
+            Preguntas frecuentes
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                  <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        VOY A PRESENTAR UNA SOLICITUD DE RECONOCIMIENTO AL PERFIL PRODEP, ¿QUE SE REVISA?
+                      </button>
+                    </h2>
+                  </div>
+              
+                  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        Cuando un profesor realiza una nueva solicitud el sistema le imprime una Ficha de recepción, ésta es revisada por el RIP, se busca que se cuente con las evidencias de cada una de las cosas que se enlistan en ésta.                        </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        QUIERO COMPRAR PERO ME PIDEN UNA FICHA DE RECEPCION
+                      </button>
+                    </h2>
+                  </div>
+                  <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        Para los profesores que reciben apoyo económico aparte del reconocmiento, en la FICHA en la última hoja se especifica la distribución del dinero, los rubos y monto solicitado, si usted no esta de acuerdo es posible solicitar a la DSA una redistribución, en el menú "Solicitudes de apoyo"en la opcion "Estado de la solicitud" puede re imprimir su ficha de recepción.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-header" id="headingThree">
+                    <h2 class="mb-0">
+                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        ¿EN QUE MOMENTO SE DAN DE ALTA O MODIFICAN LOS CUERPOS ACADEMICOS?
+                      </button>
+                    </h2>
+                  </div>
+                  <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                        Depende del cronograma que envien, pero generalmente es a mediados de año.
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header text-center">
+          Ayuda
+        </div>
+        <div class="card-body">
+            Consulte el manual de usuario<br>
+            <a href="Manual-de-usuario.pdf" target="_blank"><input type="image" src="img/formapdf.png"></a>
+       </div>
+    </div>    
+</div>
+    <footer class="page-footer bg-dark text-white text-center fixed-bottom">
+        © 2020 PRODEP-ITTG
+    </footer>        
 </body>
 </html>

@@ -30,7 +30,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light " style="background-color: #2175bc;  box-shadow: 0px 3px 20px 3px #162433;" >
+        <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark"  >
             <div class="container">
                 <a class="navbar-brand  text-white" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -50,12 +50,14 @@
                         <li class="nav-item ">
                             <a class="nav-link text-white" href="/tramites">Tramites</a>
                         </li>
+{{--
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#">Beneficiarios</a>
+                            <a class="nav-link text-white" href="/beneficiarios">Beneficiarios</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#">Notificaciones</a>
                         </li>
+--}}
                     </ul>                        
                     @endauth
 
@@ -65,17 +67,17 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item text-white">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('auth.Login') }}</a>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{ route('login') }}">{{ __('auth.Login') }}</a>
                             </li>
                             @if (Route::has('register'))
-                                <li class="nav-item text-white">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('auth.Register') }}</a>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" href="{{ route('register') }}">{{ __('auth.Register') }}</a>
                                 </li>
                             @endif
                         @else
                             <li class="nav-item dropdown ">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
@@ -102,6 +104,12 @@
             @yield('content')
         </main>
     </div>
+
+<footer class="page-footer bg-dark text-white text-center fixed-bottom">
+    © 2020 PRODEP-ITTG
+</footer>
+
+
 </body>
 @yield('code')
 </html>
