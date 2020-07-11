@@ -19,6 +19,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -41,6 +42,7 @@ Route::resource('subtramites','SubtramitesController')->except([
 
 /*
 Route::get('/evidencias/{id_tramite}', 'EvidenciasController@index');
+
 Route::resource('evidencias','EvidenciasController')->except([
     'index', 'show', 'create', 'edit', 'update'
 ]);
@@ -48,6 +50,10 @@ Route::resource('evidencias','EvidenciasController')->except([
 Route::post('/evidencias/beneficiarios','EvidenciasController@beneficiarios');
 Route::put('/evidencias/beneficiarios','EvidenciasController@conceder');
 Route::post('/s_evidencias/','EvidenciasController@store');
+Route::post('/s_evidencias2/','EvidenciasController@store2');
+
+Route::get('/ver/{id_evidencia}','EvidenciasController@show');
+
 Route::get('/evidencias/{id_tramite}','EvidenciasController@index');
 Route::put('/evidencias/{id_tramite}','EvidenciasController@update');
 Route::delete('/evidencias/{id_tramite}','EvidenciasController@destroy');

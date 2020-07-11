@@ -180,8 +180,6 @@ $().ready(function(){
         linea +='<td>' + response.data[i].usuario + '</td>';
         linea +='</tr>';
         $('#tbl-beneficiarios  > tbody').append(linea);
-        $('#btnbuscar').attr("disabled", false);
-
       }
       console.log(response);
      })
@@ -189,6 +187,9 @@ $().ready(function(){
       alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
       console.log(error);
       console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+    })
+    .then(function () {
+      $('#btnbuscar').attr("disabled", false);
     });
     
   });

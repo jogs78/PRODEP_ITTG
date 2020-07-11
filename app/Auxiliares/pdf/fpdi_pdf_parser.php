@@ -1,4 +1,8 @@
 <?php
+namespace App\Auxiliares\pdf;
+
+use App\Auxiliares\pdf\pdf_parser;
+
 /**
  * This file is part of FPDI
  *

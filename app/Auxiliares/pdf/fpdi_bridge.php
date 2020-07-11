@@ -1,4 +1,9 @@
 <?php
+namespace App\Auxiliares\pdf;
+
+use App\Auxiliares\pdf\FPDF;
+
+if (!class_exists('fpdi_bridge')) {
 /**
  * This file is part of FPDI
  *
@@ -203,4 +208,5 @@ if (!class_exists('TCPDF', false)) {
             return current(unpack('H*', $str));
         }
     }
+}
 }

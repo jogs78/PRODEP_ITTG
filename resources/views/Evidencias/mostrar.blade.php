@@ -1,6 +1,23 @@
 @extends('layouts.app')
 @section('content')
 
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+@if ($subtramite->publico())
+  Este tramite es público, cualquiera puede ver las evidencias de él.
+@else
+  Este tramite es privado, las personas autorizadas a ver estas evidencias son:
+  <ul>
+    @foreach ($subtramite->permitidos() as $permitido)
+        <li>{{$permitido->usuario}}</li>
+    @endforeach
+  </ul>
+@endif
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
+
+</div>
+
 <table class="table" border="1" id="lista_evidencias">  
   <thead>      
       <tr style="text-align: center;">
@@ -17,7 +34,7 @@
         @can('view', $evidencia)
         <tr id="{{$evidencia->id}}">
           <td>
-            {{$evidencia->documento}}
+            <a href="/ver/{{$evidencia->id}}" target="_blank" rel="noopener noreferrer">{{$evidencia->documento}}</a>            
           </td>   
           <td class="editable editabled">
             {{$evidencia->descripcion}}
@@ -99,40 +116,43 @@
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-              Los usuarios permitidos para este tramite son:
-              <ul>
-                @foreach ($subtramite->permitidos(); as $permitido)                  
-                  <div class="li">{{$permitido->usuario}}</div>
-                @endforeach
-              </ul>
-                 <!-- 
+              <!-- 
                   <form id="formulario" action="/s_evidencias" method="POST" enctype="multipart/form-data" >  
                  -->
               <span id="prima" class="visible">
                 <input type="hidden" name="origen" id="origen" value="{{$subtramite->id}}">
                 <div class="row">
                   <div class="form-group col-12">
-                    Documento: <input class="form-control"  type="file" name="documento" id="documento">
+                    Documento: <input class="form-control"  type="file" name="documento2" id="documento2">
                   </div>
                 </div>
                 <div class="row">
                   <div class="form-group col-12">
-                    Descripcion: <input class="form-control"  type="text" name="descripcion" id="descripcion" placeholder="Escriba una descripcción">
+                    Descripcion: <input class="form-control"  type="text" name="descripcion2" id="descripcion2" placeholder="Escriba una descripcción">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    Tiene oficio de presentación <input type="checkbox" id="tiene" checked>
+                  </div>
+                  <div class="col" id="cuantas_ofi">
+                    Cuantas páginas: <input type="number" min="1"  id="cuantas_oficio" value="1">
+                  </div>                  
+                </div>
+                <div class="row">
+                  <div class="col">
+                    Cuantos destinatarios: <input type="number" min="1" id="destinatarios" value="{{count( $subtramite->permitidos() )}}">
+                  </div>
+                  <div class="col">
+                    Paginas por cada uno: <input type="number" min="1"  id="cuantas_cada" value="1">
                   </div>
                 </div>
                 <div class="row">
                   <div class="form-group col-12">
-                    <input class="form-control btn btn-primary" type="button" value="Procesar" id="btn_agregar_evidencia">
+                    <input class="form-control btn btn-primary" type="button" value="Procesar" id="btn_agregar_evidencia2">
                   </div>
                 </div>
-              <div class="row">
-                Tiene oficio de presentación, <>  cuantas paginas
-                Paginas por cada beneficiario
-              </div>
-              
               </span>
-
-
             </div><!-- modal-body -->
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
@@ -204,6 +224,12 @@
 @section('code')
 <script>
 var mostrando_input = false;
+@if ($subtramite->publico())
+var tramite_publico = true;
+@else
+var tramite_publico = false;    
+@endif
+
 $().ready(function(){
   $('#exampleModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
@@ -215,7 +241,15 @@ $().ready(function(){
     $('#subtramite_id').val(subtramite)
     
   });
+  
+  $("#tiene").click(function(event){
 
+    if( ! $('#tiene').prop('checked') ) 
+      $('#cuantas_ofi').addClass("invisible")
+    else
+      $('#cuantas_ofi').removeClass("invisible")
+
+   });  
   $("#btnbuscar").click(function(event){
     $('#btnbuscar').attr("disabled", true);
     axios.post('/evidencias/beneficiarios'  , {
@@ -229,8 +263,6 @@ $().ready(function(){
                                                      
     .then(function (response) {
       $('#tbl-beneficiarios tbody').empty();
-      $('#btnbuscar').attr("disabled", false);
-
       for (let i = 0; i < response.data.length; i++) {
         linea  = '<tr>';
         linea +='<td><input class="conceder" type="checkbox" ' + response.data[i].checked + ' id="' + response.data[i].id + '"></td>';
@@ -241,10 +273,12 @@ $().ready(function(){
       console.log(response);
      })
     .catch(function (error) {
-      $('#btnbuscar').attr("disabled", false);
       alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
       console.log(error);
       console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+    })
+    .then(function () {
+      $('#btnbuscar').attr("disabled", false);
     });
     
   });
@@ -262,28 +296,83 @@ $().ready(function(){
         formData.append('descripcion', $("#descripcion").val());
         var files = $('#documento')[0].files[0];
         formData.append('documento',files);
-
+        $("#btn_agregar_evidencia").attr("disabled", true);
 
         axios.post('/s_evidencias'  ,   formData,   { headers: {  'Content-Type': 'multipart/form-data' }  } )
           .then(function (response) {
             linea  ='<tr id="' + response.data.id + '"  >';
-            linea +='<td>' + response.data.documento + '</td>';
+            linea +='<td><a href="/ver/' + response.data.id + '" target="_blank" rel="noopener noreferrer">' +  response.data.documento + '</a></td>';
             linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
             linea +='<td>';
             linea +='<button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> ';
-            linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
-
+            if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
             linea +='</td>';
             linea +='</tr>';
             $('#lista_evidencias  > tbody').append(linea);
-  //            $('#lista_estudiantes > tbody > tr#' + id ).remove();
+  //            $('#lista_estudiantes > tbody > tr#' + id  ).remove();
             console.log(response);
           })
           .catch(function (error) {
             alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
             console.log(error);
             console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
-          })   
+          })
+          .then(function () {
+            $('#btn_agregar_evidencia').attr("disabled", false);
+          });  
+    });
+
+    $("#btn_agregar_evidencia2").click(function(event){
+        descripcion = $("#descripcion2").val();
+        if (descripcion==""){
+          alert("Falta especificar una descripcion");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('tramite_id', {{$subtramite->id}});
+        formData.append('descripcion', $("#descripcion2").val());
+        var files = $('#documento2')[0].files[0];
+        formData.append('documento',files);
+
+        formData.append('tiene_oficio',$('#tiene').prop('checked'));
+        formData.append('cuantas_el_o',$("#cuantas_oficio").val());
+        formData.append('cuantos_dest',$("#destinatarios").val());
+        formData.append('cuantas_cada',$("#cuantas_cada").val());
+
+        $("#btn_agregar_evidencia2").attr("disabled", true);
+
+        axios.post('/s_evidencias2'  ,   formData,   { headers: {  'Content-Type': 'multipart/form-data' }  } )
+          .then(function (response) {
+            $('#lista_evidencias  > tbody').html('');
+            for (let i = 0; i < response.data.length; i++) {
+              linea  ='<tr id="' + response.data[i].id + '"  >';  
+              linea +='<td><a href="/ver/' + response.data[i].id + '" target="_blank" rel="noopener noreferrer">' + response.data[i].documento + '</a></td>';
+              linea +='<td class="editable editabled">' + response.data[i].descripcion + '</td>';
+              linea +='<td>';
+              linea +='<button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> ';
+              if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
+
+              linea +='</td>';
+              linea +='</tr>';
+              $('#lista_evidencias  > tbody').append(linea);
+              //            $('#lista_estudiantes > tbody > tr#' + id ).remove();
+
+              
+            }
+//            $('.bd-example-modal-lg2').hide();
+            console.log(response);
+          })
+          .catch(function (error) {
+            alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+            console.log(error);
+            console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+          })
+          .then(function () {
+            $('#btn_agregar_evidencia2').attr("disabled", false);
+          });  
+ 
     });
 
 
@@ -348,22 +437,24 @@ $().ready(function(){
 
           axios.put('/evidencias/' + this.parentElement.id  , params )
           .then(function (response) {
-            linea  ='';
-            linea +='<td>' + response.data.documento + '</td>';
-            linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
+/*             linea  ='';
+            linea +='<td><a href="/ver/' + response.data.id + '" target="_blank" rel="noopener noreferrer">' +  response.data.documento + '</a></td>';            linea +='<td><a href="/ver/' + response.data.id + '" target="_blank" rel="noopener noreferrer">' +  response.data.documento + '</a></td>';
             linea +='<td>';
             linea +='<button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> ';
             linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
             linea +='</td>';
             linea +='';
-//            $('#lista_evidencias > tbody > tr#' + id ).remove();
-            $('#lista_evidencias > tbody > tr#' + response.data.id).html(linea);
+ *///            $('#lista_evidencias > tbody > tr#' + id ).remove();
+            $('#lista_evidencias > tbody > tr#' + response.data.id + '> td.editable' ).html(response.data.descripcion);
             console.log(response);
           })
           .catch(function (error) {
+  			    mostrando_input = false;
+            this.innerText = this.childNodes[0].defaultValue
             alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
             console.log(error);
             console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+  
           });
 
           mostrando_input = false;

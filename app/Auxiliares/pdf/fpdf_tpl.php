@@ -1,4 +1,9 @@
 <?php
+namespace App\Auxiliares\pdf;
+
+use App\Auxiliares\pdf\fpdi_bridge;
+
+if (!class_exists('FPDF_TPL')) {
 /**
  * This file is part of FPDI
  *
@@ -545,4 +550,5 @@ class FPDF_TPL extends fpdi_bridge
             parent::_out($s);
         }
     }
+}
 }

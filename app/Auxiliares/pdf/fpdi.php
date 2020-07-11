@@ -1,4 +1,8 @@
 <?php
+namespace App\Auxiliares\pdf;
+
+use App\Auxiliares\pdf\FPDF_TPL;
+
 /**
  * This file is part of FPDI
  *
@@ -7,6 +11,7 @@
  * @license   http://opensource.org/licenses/mit-license The MIT License
  * @version   1.6.1
  */
+
 
 if (!class_exists('FPDF_TPL')) {
     require_once('fpdf_tpl.php');
@@ -558,8 +563,10 @@ class FPDI extends FPDF_TPL
                 $this->_straightOut('<<');
 
                 reset ($value[1]);
-
-                while (list($k, $v) = each($value[1])) {
+//while (list($name, $value) = each($directives)) {
+// foreach($directives as $name => $value) {
+                foreach($value[1] as $k => $v){
+//                while (list($k, $v) = each($value[1])) {
                     $this->_straightOut($k . ' ');
                     $this->_writeValue($v);
                 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Auxiliares\PdfDivider;
 use App\Models\Tramite;
 use App\Models\Evidencia;
 use App\Models\Concesion;
@@ -43,19 +44,89 @@ class EvidenciasController extends Controller
     public function store(Request $request)
     {
         try {
+
             $file = $request->file('documento');
             $fileName =  $file->getClientOriginalName();
-            $path = Storage::putFileAs(
-                '', $request->file('documento'), $fileName
-            );
+
+            if (! Storage::disk('local')->exists($request->input('tramite_id') . '\\' . $fileName) ) {
+                $path = Storage::putFileAs(
+                    '', $request->file('documento'), $request->input('tramite_id') . '\\' . $fileName
+                );
+            }else return response()->json(["error"=>"Ya existe un archivo con ese nombre (" . $fileName . ")"],404) ;
 
             $evidencia = new Evidencia();
             $evidencia->tramite_id = $request->input('tramite_id'); 
-            $evidencia->documento = $path; 
+            $evidencia->documento = $fileName; 
             $evidencia->descripcion = $request->input('descripcion'); 
             $evidencia->save();
 
+            $evidencia_id = $evidencia->id;
+
+
+            // $evidencia = Evidencia::find($evidencia_id);
+            // $evidencia->documento = $path; 
+            // $evidencia->save();
+
             $e= $evidencia->toArray();
+            return response()->json($e,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            
+            return response()->json(["error"=>"Error ". $e->getMessage() ."en el archivo: '" . $e->getFile() . "' en la línea: " . $e->getLine() ],409) ;
+        }catch (\Exception $e){
+            return response()->json(["error"=>"Error ". $e->getMessage() ."en el archivo: '" . $e->getFile() . "' en la línea: " . $e->getLine() ],500) ;
+        }
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store2(Request $request)
+    {
+        try {
+
+            $file = $request->file('documento');
+            $documento = $file->getRealPath();
+            $fileName =  $request->input('descripcion');
+
+/* 
+            validar si existe una evidencia que se llame asi
+            if (! Storage::disk('local')->exists($request->input('tramite_id') . '\\' . $fileName) ) {
+                $path = Storage::putFileAs(
+                    '', $request->file('documento'), $request->input('tramite_id') . '\\' . $fileName
+                );
+            }else return response()->json(["error"=>"El archivo ya existe (" . $fileName . ")"],404) ;
+ */
+
+
+            $pdf = new PdfDivider();
+            $pdf->setFolder($request->input('tramite_id'));
+            $pdf->setPrefijo($fileName);
+
+            if($request->input('tiene_oficio') == "true")
+                $pdf->setOficio($request->input('cuantas_el_o'));
+            $pdf->setDestinatarios($request->input('cuantos_dest'),$request->input('cuantas_cada'));
+
+            $pdf->setOrigen($documento);
+
+            $pdf->procesar();
+            
+//            1 oficio de 1
+//            12 reconocmientos de 1 
+            $tramite_id= $request->input('tramite_id');
+            foreach ($pdf->getNames() as $archivo ) {
+                $evidencia = new Evidencia();
+                $evidencia->tramite_id = $tramite_id; 
+                $evidencia->documento = $archivo; 
+                $evidencia->descripcion = $archivo; 
+                $evidencia->save();
+            }
+            $evidencias = Evidencia::where('tramite_id',$tramite_id)->get();
+            $e= $evidencias->toArray();
+//            $e= $pdf->getNames();
             return response()->json($e,200) ;
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
@@ -72,7 +143,25 @@ class EvidenciasController extends Controller
      */
     public function show($id)
     {
-        //
+        $evidencia =  Evidencia::find($id);
+        $tramite_id = $evidencia->tramite_id;
+        $url =Storage::disk('local')->path('') . "$tramite_id/" .$evidencia->documento;
+
+        if(strpos($evidencia->documento , ".pdf"  ) ){
+            $content = "application/pdf";
+        }
+          //,".JPG",".png",".PNG",".gif",".GIF",".jpeg",".JPEG"] 
+          if(strpos ( $evidencia->documento , ".jpg" ) ) {
+            $content = "image/jpeg";
+          }
+          return response()->make(file_get_contents($url), 200, [
+            'Content-Type' => $content,
+            'Content-Disposition' => 'inline; filename="'.$url.'"'
+            ]
+        );
+
+
+
     }
 
     /**
@@ -122,10 +211,10 @@ class EvidenciasController extends Controller
             $evidencia = Evidencia::find($id);
             $fileName = $evidencia->documento;
 
-            if (Storage::disk('local')->exists($fileName) ) {
-                Storage::disk('local')->delete($fileName) ;
-            }else return response()->json(["error"=>"Evidencia no encontrada "],404) ;
-            Concesion::where(concesionado_id,$id)->where(concesionado_type,"App\Models\Evidencia")->delete();
+            if (Storage::disk('local')->exists($evidencia->tramite_id . '\\' . $fileName) ) {
+                Storage::disk('local')->delete($evidencia->tramite_id . '\\' . $fileName) ;
+            }else return response()->json(["error"=>"Evidencia no encontrada (" . $evidencia->tramite_id . '\\' . $fileName . ")"],404) ;
+            Concesion::where('concesionado_id',$id)->where('concesionado_type',"App\Models\Evidencia")->delete();
             $e= $evidencia->toArray();
             $evidencia->delete();
             DB::commit();

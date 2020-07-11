@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Tramite;
 use App\Models\Concesion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Facades\DB;
 
 class SubtramitesController extends Controller
@@ -45,6 +47,7 @@ class SubtramitesController extends Controller
             $tramite->fecha = $request->input('fecha'); 
             $tramite->descripcion = $request->input('descripcion'); 
             $tramite->save();
+            Storage::makeDirectory($tramite->id);
             $t= $tramite->toArray();
             return response()->json($t,200) ;
         }catch (\Illuminate\Database\QueryException $e){
@@ -113,6 +116,7 @@ class SubtramitesController extends Controller
             $tramite= Tramite::find($id);  
             $t= $tramite->toArray();
             $tramite->delete();
+            Storage::deleteDirectory($id);
             return response()->json($t,200) ;
         }catch (\Illuminate\Database\QueryException $e){
             //if($e->getCode()==23000)  
