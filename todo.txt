@@ -1,0 +1,1 @@
+que no se metan por rutas (politicas en controlador no solo vista)
