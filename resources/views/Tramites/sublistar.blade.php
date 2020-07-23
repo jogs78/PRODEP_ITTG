@@ -91,6 +91,7 @@
         </div><!-- modal-content -->
       </div><!-- modal-dialog -->
     </div><!-- modal fade -->
+
 <!-- modal de beneficiarios-->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -176,8 +177,8 @@ $().ready(function(){
       $('#tbl-beneficiarios tbody').empty();
       for (let i = 0; i < response.data.length; i++) {
         linea  = '<tr>';
-        linea +='<td><input class="conceder" type="checkbox" ' + response.data[i].checked + ' id="' + response.data[i].id + '"></td>';
-        linea +='<td>' + response.data[i].usuario + '</td>';
+        linea +='<td><input class="conceder" type="checkbox" ' + response.data[i].checked + ' id="' + response.data[i].id + '" data-concesionario-type="' + response.data[i].concesionario_type + '"></td>';
+        linea +='<td>' + response.data[i].nombre + '</td>';
         linea +='</tr>';
         $('#tbl-beneficiarios  > tbody').append(linea);
       }
@@ -293,19 +294,23 @@ $().ready(function(){
     });
     
     $('#tbl-beneficiarios tbody').on("click", ".conceder" , function(){
-    axios.put('/subtramites/beneficiarios'  , {
-                                _token:  '{{ csrf_token() }}',
-                                concesionado_id: $("#tramite_id").val(),
-                                user_id: this.id,
-                              })
-    .then(function (response) {
-      console.log(response);
-     })
-    .catch(function (error) {
-      alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
-      console.log(error);
-      console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
-    });
+      var triggered = $(this) // Button that triggered the modal
+      var tipo  = triggered.data('concesionario-type') // Extract info from data-* attributes
+      axios.put('/subtramites/beneficiarios'  , {
+                                  _token:  '{{ csrf_token() }}',
+                                  concesionado_id: $("#tramite_id").val(),
+                                  concesionario_type: tipo,
+                                  user_id: this.id,
+                                })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+        console.log(error);
+        console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+      }
+    );
   });
 
     $("#lista_tramites tbody").on("click", ".btn_eliminar_tramite" , function(){

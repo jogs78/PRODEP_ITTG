@@ -16,8 +16,36 @@ use Illuminate\Support\Facades\DB;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('sistema.inicio');
 });
+
+Route::get('/tst', function () {
+    return App\User::find(11)->beneficiario->ca->clave;
+    
+});
+
+
+
+Route::get('/preguntas_frecuentes', function () {
+    return view('sistema.preguntas');
+});
+Route::get('/transparencia', function () {
+    return view('sistema.transparencia');
+});
+Route::get('/estadisticos', function () {
+    return view('sistema.estadisticos');
+});
+Route::get('/comision_tecnica', function () {
+    return view('sistema.comision_tecnica');
+});
+Route::get('/contraloria_social', function () {
+    return view('sistema.contraloria_social');
+});
+
+
+
+
+
 
 
 Auth::routes();
@@ -59,4 +87,12 @@ Route::put('/evidencias/{id_tramite}','EvidenciasController@update');
 Route::delete('/evidencias/{id_tramite}','EvidenciasController@destroy');
 
 Route::resource('beneficiarios','BeneficiariosController');
+
+Route::post('/cuerpos/miembros','CaController@miembros');
+Route::put('/cuerpos/miembros','CaController@enrrolar');
+
+Route::resource('cuerpos','CaController');
+
+
+
 

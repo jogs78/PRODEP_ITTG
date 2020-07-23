@@ -182,7 +182,8 @@ class TramitesController extends Controller
 
             $concesion = Concesion::where('concesionado_id' , $request->input('concesionado_id'))
             ->where('concesionado_type' , 'App\Models\Tramite')
-            ->where('user_id' , $request->input('user_id') )
+            ->where('concesionario_type' , $request->input('concesionario_type'))
+            ->where('concesionario_id' , $request->input('user_id') )
             ->get()->count();
 
             if($concesion==0){
@@ -190,13 +191,15 @@ class TramitesController extends Controller
                 $concesion = Concesion::Create(
                     ['concesionado_id' => $request->input('concesionado_id'),
                      'concesionado_type' => 'App\Models\Tramite',
-                     'user_id' => $request->input('user_id')]
+                     'concesionario_type'=>$request->input('concesionario_type'),
+                     'concesionario_id' => $request->input('user_id')]
                 );    
             }else{
                 $accion="quitar";
                 Concesion::where('concesionado_id' , $request->input('concesionado_id'))
                 ->where('concesionado_type' , 'App\Models\Tramite')
-                ->where('user_id' , $request->input('user_id') )
+                ->where('concesionario_type' , $request->input('concesionario_type'))
+                ->where('concesionario_id' , $request->input('user_id') )
                 ->delete();
             }
 

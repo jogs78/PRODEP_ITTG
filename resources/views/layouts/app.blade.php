@@ -50,6 +50,12 @@
                         <li class="nav-item ">
                             <a class="nav-link text-white" href="/tramites">Tramites</a>
                         </li>
+
+                        @can('before',  App\Models\Ca::class)
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="/cuerpos">CAs</a>
+                        </li>                            
+                        @endcan
 {{--
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/beneficiarios">Beneficiarios</a>
@@ -76,9 +82,9 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item dropdown ">
+                            <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    LOGEADO COMO: {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -98,14 +104,16 @@
                 </div>
             </div>
         </nav>
-        <img src="/img/tecnm.png" width="18%" height="20%" style="padding: 20px" >
+        <br>
+        <br>
+        <img src="/img/ittg.png" width="18%" height="20%" style="padding: 20px" >
         <img src="/img/prodep.jpg" width="18%" height="13%" style="margin-left: 50%;">        
         <main class="py-4">
             @yield('content')
         </main>
     </div>
 
-<footer class="page-footer bg-dark text-white text-center fixed-bottom">
+<footer class="page-footer bg-dark text-white text-center justify-content-center fixed-bottom">
     © 2020 PRODEP-ITTG
 </footer>
 

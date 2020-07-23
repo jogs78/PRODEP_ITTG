@@ -131,7 +131,10 @@ class SubtramitesController extends Controller
             //$campos = $request->all();
             $tramite= Tramite::find($request->input('tramite_id'));  
             if($tramite==null) return response()->json(["error"=>"Tramite no encontrado"],404) ;
-            $t= $tramite->permisos($request->input('nombre'),$request->input('paterno'),$request->input('materno'));
+
+            $a= $tramite->permisos($request->input('nombre'),$request->input('paterno'),$request->input('materno'));
+            $b= $tramite->permisos2();
+            $t = array_merge($a,$b);
             return response()->json($t,200) ;
         }catch (\Illuminate\Database\QueryException $e){
             return response()->json(["error"=>"Error ". $e->getMessage()],409) ;
@@ -144,7 +147,8 @@ class SubtramitesController extends Controller
 
             $concesion = Concesion::where('concesionado_id' , $request->input('concesionado_id'))
             ->where('concesionado_type' , 'App\Models\Tramite')
-            ->where('user_id' , $request->input('user_id') )
+            ->where('concesionario_type' , $request->input('concesionario_type'))
+            ->where('concesionario_id' , $request->input('user_id') )
             ->get()->count();
 
             if($concesion==0){
@@ -152,13 +156,15 @@ class SubtramitesController extends Controller
                 $concesion = Concesion::Create(
                     ['concesionado_id' => $request->input('concesionado_id'),
                      'concesionado_type' => 'App\Models\Tramite',
-                     'user_id' => $request->input('user_id')]
+                     'concesionario_type'=>$request->input('concesionario_type'),
+                     'concesionario_id' => $request->input('user_id')]
                 );    
             }else{
                 $accion="quitar";
                 Concesion::where('concesionado_id' , $request->input('concesionado_id'))
                 ->where('concesionado_type' , 'App\Models\Tramite')
-                ->where('user_id' , $request->input('user_id') )
+                ->where('concesionario_type' , $request->input('concesionario_type'))
+                ->where('concesionario_id' , $request->input('user_id') )
                 ->delete();
             }
 

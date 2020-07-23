@@ -9,7 +9,7 @@ class Concesion extends Model
     protected $table = "concesiones";
 
     protected $fillable = [
-        'concesionado_id', 'concesionado_type', 'user_id'
+        'concesionado_id', 'concesionado_type', 'user_id', 'concesionario_id', 'concesionario_type'
     ];
     public $timestamps =false;
 

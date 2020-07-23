@@ -5,12 +5,17 @@
 @if ($subtramite->publico())
   Este tramite es público, cualquiera puede ver las evidencias de él.
 @else
-  Este tramite es privado, las personas autorizadas a ver estas evidencias son:
+  Este tramite es privado, los autorizados a ver estas evidencias son:
   <ul>
     @foreach ($subtramite->permitidos() as $permitido)
-        <li>{{$permitido->usuario}}</li>
+      <li>{{$permitido->nombre}}</li>
     @endforeach
+    @forelse ($subtramite->permitidosca() as $permitido)
+      <li>Miembros de: {{$permitido->nombre}}</li>
+    @empty
+    @endforelse
   </ul>
+
 @endif
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
   <span aria-hidden="true">&times;</span>
@@ -66,9 +71,8 @@
         <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg2">DIVIDIR Y ASIGNAR EVIDENCIA</button>
       </div>
     </div>
-
-      
   @endcan
+
   <!-- SUBIR EVIDENCIA -->
   <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="false"  data-backdrop="static">
     <div class="modal-dialog modal-lg">
@@ -265,8 +269,8 @@ $().ready(function(){
       $('#tbl-beneficiarios tbody').empty();
       for (let i = 0; i < response.data.length; i++) {
         linea  = '<tr>';
-        linea +='<td><input class="conceder" type="checkbox" ' + response.data[i].checked + ' id="' + response.data[i].id + '"></td>';
-        linea +='<td>' + response.data[i].usuario + '</td>';
+        linea +='<td><input class="conceder" type="checkbox" ' + response.data[i].checked + ' id="' + response.data[i].id + '" data-concesionario-type="' + response.data[i].concesionario_type + '"></td>';
+        linea +='<td>' + response.data[i].nombre + '</td>';
         linea +='</tr>';
         $('#tbl-beneficiarios  > tbody').append(linea);
       }
@@ -377,19 +381,23 @@ $().ready(function(){
 
 
     $('#tbl-beneficiarios tbody').on("click", ".conceder" , function(){
-    axios.put('/evidencias/beneficiarios'  , {
-                                _token:  '{{ csrf_token() }}',
-                                concesionado_id: $("#evidencia_id").val(),
-                                user_id: this.id,
-                              })
-    .then(function (response) {
-      console.log(response);
-     })
-    .catch(function (error) {
-      alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
-      console.log(error);
-      console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
-    });
+      var triggered = $(this) // Button that triggered the modal
+      var tipo  = triggered.data('concesionario-type') // Extract info from data-* attributes
+      axios.put('/evidencias/beneficiarios'  , {
+                                  _token:  '{{ csrf_token() }}',
+                                  concesionado_id: $("#evidencia_id").val(),
+                                  concesionario_type: tipo,
+                                  user_id: this.id,
+                                })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+        console.log(error);
+        console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+      }
+    );
   });
 
 

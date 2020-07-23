@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Beneficiario extends User
 {
-    protected $primaryKey = 'user_id';
+//    protected $primaryKey = 'user_id';
     protected $fillable = [
         'rfc', 'genero', 'civil', 'nacionalidad', 'entidad', 'fecha_nacimiento', 'telefono', 'celular', 'email_ins' ,'fecha_inscrpcion' , 'perfil' , 'area' , 'disciplina', 'nombramiento', 'tipo_nombramiento' , 'dedicacion' , 'unidad', 'fecha_contrato', 'nivel' , 'siglas' , 'estudios' , 'pais' , 'institucion_otorgante' , 'fecha_titulo',
     ];
@@ -26,4 +26,20 @@ class Beneficiario extends User
     {
         return $this->belongsTo('App\User');
     }
+
+    public function ca(){
+        return $this->hasOneThrough(
+            'App\Models\Ca',
+            'App\Models\Miembro',
+            'beneficiario_id',
+            'id'/*cas.id*/,
+            'id'/* miembros.id */,
+            'ca_id'
+        );
+        
+//        ('App\Models\Ca','beneficiario_id');
+
+
+    }
+
 }

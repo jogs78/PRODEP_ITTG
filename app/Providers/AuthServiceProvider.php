@@ -21,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
         // 'App\Model' => 'App\Policies\ModelPolicy',
         'App\Models\Tramite' => 'App\Policies\SubtramitesPolicy',
         'App\Models\Evidencia' => 'App\Policies\EvidenciasPolicy',
+        'App\Models\Ca' => 'App\Policies\CasPolicy',
         //    Tramite::class => SubtramitesPolicy::class,
     ];
 

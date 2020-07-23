@@ -27,20 +27,47 @@ class Tramite extends Model
     public function concesiones(){
         return $this->morphMany('App\Models\Concesion', 'concesionado');
     }
+
     public function permisos($nombre, $apat, $amat){
         //$sql = "SELECT users.id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as usuario, concesionado_type, IF( ISNULL(concesionado_id)=1,'','checked') as checked FROM (select * from concesiones where concesionado_type like '%Tramite' and concesionado_id = " . $this->id . " ) L RIGHT JOIN users on L.user_id = users.id order by usuario" ;
-        $sql = "SELECT users.id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as usuario, concesionado_type, IF( ISNULL(concesionado_id)=1,'','checked') as checked FROM (select * from concesiones where concesionado_type like '%Tramite' and concesionado_id = " . $this->id . " ) L RIGHT JOIN users on L.user_id = users.id  WHERE users.name like '%" . $nombre . "%' AND users.apellido_paterno like '%" . $apat . "%' AND users.apellido_materno like '%" . $amat . "%' order by usuario";
+//        $sql = "SELECT users.id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as usuario, concesionado_type, IF( ISNULL(concesionado_id)=1,'','checked') as checked FROM (select * from concesiones where concesionado_type like '%Tramite' and concesionado_id = " . $this->id . " ) L RIGHT JOIN users on L.user_id = users.id  WHERE users.name like '%" . $nombre . "%' AND users.apellido_paterno like '%" . $apat . "%' AND users.apellido_materno like '%" . $amat . "%' order by usuario";
+//        $sql = "SELECT users.id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as nombre, 'App\\\\Models\\\\Beneficiario' as concesionario_type , IF( ISNULL(concesionado_id)=1,'','checked') as checked FROM (select * from concesiones where concesionado_type like '%Tramite' and concesionado_id = " . $this->id . " ) L RIGHT JOIN users on L.user_id = users.id  WHERE users.name like '%" . $nombre . "%' AND users.apellido_paterno like '%" . $apat . "%' AND users.apellido_materno like '%" . $amat . "%' order by nombre";
+        $campos1 = " users.id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as nombre, 'App\\\\Models\\\\Beneficiario' as concesionario_type , IF( ISNULL(concesionado_id)=1,'','checked') as checked ";
+        $subL =  "select * from concesiones where concesionado_type like '%Tramite' and concesionario_type like '%Beneficiario' and concesionado_id = " . $this->id ;
+        $filtro ="users.name like '%" . $nombre . "%' AND users.apellido_paterno like '%" . $apat . "%' AND users.apellido_materno like '%" . $amat . "%'";
+        $sql1  = "SELECT $campos1 FROM ( $subL ) L RIGHT JOIN users on L.concesionario_id = users.id  WHERE $filtro order by nombre";
+
+        $a = DB::select(DB::raw($sql1));
+        return $a;
+    }
+    public function permisos2(){
+        $campos2 = " cas.id, CONCAT(clave, ' ', nombre) as nombre, 'App\\\\Models\\\\Ca' as concesionario_type , IF( ISNULL(concesionado_id)=1,'','checked') as checked ";
+        $subL2 =  "select * from concesiones where concesionado_type like '%Tramite' and concesionario_type like '%Ca' and concesionado_id = " . $this->id ;
+        $sql = "SELECT $campos2 FROM ( $subL2 ) L RIGHT JOIN cas on L.concesionario_id = cas.id  order by nombre";
         $a = DB::select(DB::raw($sql));
         return $a;
     }
 
+    
     public function permitidos(){
-        $sql = "SELECT id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as usuario FROM users WHERE id in (select user_id from concesiones where concesionado_type like '%Tramite' and concesionado_id = " . $this->id . " ) order by usuario";
+        $campos1 = "id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as nombre ";
+        $subQ = "select concesionario_id from concesiones where concesionado_type like '%Tramite' and concesionario_type like '%Beneficiario' and concesionado_id = " . $this->id ;
+        $sql = "SELECT $campos1 FROM users WHERE id in ( $subQ ) order by nombre";
         $a = DB::select(DB::raw($sql));
         return $a;
     }
+
+    public function permitidosca(){
+        $campos1 = "id, CONCAT(clave, ' ', nombre ) as nombre ";
+        $subQ = "select concesionario_id from concesiones where concesionado_type like '%Tramite' and concesionario_type like '%Ca' and concesionado_id = " . $this->id ;
+        $sql = "SELECT $campos1 FROM cas WHERE id in ( $subQ ) order by nombre";
+        $a = DB::select(DB::raw($sql));
+        return $a;
+    }
+
+
     public function publico(){
-        return Concesion::where('user_id', '=', -1)->where('concesionado_type', '=', "App\Models\Tramite")->where('concesionado_id', '=', $this->id )->exists();
+        return Concesion::where('concesionario_id', '=', -1)->where('concesionado_type', '=', "App\Models\Tramite")->where('concesionado_id', '=', $this->id )->exists();
     }
         
 }
