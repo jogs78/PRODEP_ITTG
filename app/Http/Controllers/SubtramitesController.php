@@ -193,15 +193,20 @@ class SubtramitesController extends Controller
         }
     }
     public function publicar(Request $request){
+        //hacer publico un tramite
         try {
             DB::beginTransaction();
-            Concesion::where('concesionado_id' , $request->input('concesionado_id'))
+            Concesion::
+                where('concesionado_id' , $request->input('concesionado_id'))
                 ->where('concesionado_type' , 'App\Models\Tramite')
                 ->delete();
             $concesion = Concesion::Create(
-                ['concesionado_id' => $request->input('concesionado_id'),
+                [
+                    'concesionado_id' => $request->input('concesionado_id'),
                     'concesionado_type' => 'App\Models\Tramite',
-                    'user_id' => -1]
+
+                    'concesionario_id' => -1,
+                ]
             );    
             DB::commit();
             return response()->json( $concesion->toArray()  ,200) ;

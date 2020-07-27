@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.public')
 @section('content')
 
 <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -36,7 +36,7 @@
     </thead>
     <tbody>
       @foreach($subtramite->evidencias as $evidencia)
-        @can('view', $evidencia)
+      @if ($evidencia->publica())
         <tr id="{{$evidencia->id}}">
           <td>
             <a href="/ver/{{$evidencia->id}}" target="_blank" rel="noopener noreferrer">{{$evidencia->documento}}</a>            
@@ -48,7 +48,6 @@
             @can('delete', $evidencia)
               <button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> 
             @endcan
-
             @can('asignar', App\Models\Evidencia::class)
               @if (!$evidencia->publica())
                 <button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="{{$evidencia->id}}" data-evidencia-nombre="{{$evidencia->descripcion}}" data-subtramite-id="{{$subtramite->id}}">Beneficiarios</button>
@@ -56,7 +55,31 @@
             @endcan
           </td>  
         </tr> 
+      @else          
+        @can('view', $evidencia)
+        <tr id="{{$evidencia->id}}">
+          <td>
+            <a href="/ver/{{$evidencia->id}}" target="_blank" rel="noopener noreferrer">{{$evidencia->documento}}</a>            
+          </td>   
+          <td class="editable editabled">
+            {{$evidencia->descripcion}}
+          </td>
+          <td>
+            @can('delete', $evidencia)
+            <button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> 
+            @endcan
+            
+            @can('asignar', App\Models\Evidencia::class)
+            @if (!$evidencia->publica())
+            <button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="{{$evidencia->id}}" data-evidencia-nombre="{{$evidencia->descripcion}}" data-subtramite-id="{{$subtramite->id}}">Beneficiarios</button>
+            @endif
+            @endcan
+          </td>  
+        </tr> 
         @endcan
+      @endif
+      
+
       @endforeach
     </tbody>
   </table> 

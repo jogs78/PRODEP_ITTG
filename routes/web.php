@@ -20,10 +20,27 @@ Route::get('/', function () {
 });
 
 Route::get('/tst', function () {
-    return App\User::find(11)->beneficiario->ca->clave;
-    
+    return App\User::find(11)->beneficiario->ca->clave;    
 });
 
+
+Route::get('/prodep', function () {
+    return view('normativa.prodep');
+});
+
+Route::get('/contraloria_social', function () {
+    return view('normativa.contraloria_social');
+});
+
+Route::get('/documents', function () {
+    return view('normativa.documentos');
+});
+Route::get('/informes', function () {
+    return view('normativa.informes');
+});
+Route::get('/quejas', function () {
+    return view('normativa.quejas');
+});
 
 
 Route::get('/preguntas_frecuentes', function () {
@@ -32,14 +49,8 @@ Route::get('/preguntas_frecuentes', function () {
 Route::get('/transparencia', function () {
     return view('sistema.transparencia');
 });
-Route::get('/estadisticos', function () {
-    return view('sistema.estadisticos');
-});
 Route::get('/comision_tecnica', function () {
     return view('sistema.comision_tecnica');
-});
-Route::get('/contraloria_social', function () {
-    return view('sistema.contraloria_social');
 });
 
 

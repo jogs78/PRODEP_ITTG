@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.public')
 @section('content')
 <table id="tabla1" class="table" border="1" id="lista_benficiarios"> 
     <thead>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.public')
 @section('content')
     <div class="alert alert-info" role="alert">
         Editar información de {{$name->name}} {{$name->apellido_paterno}} {{$name->apellido_materno}}

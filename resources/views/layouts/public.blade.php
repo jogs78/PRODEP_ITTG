@@ -31,31 +31,46 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto ">
                         <li class="nav-item ">
-                            <a class="nav-link text-white" href="/preguntas_frecuentes">Preguntas Frecuentes</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/estadisticos">Estadisticos</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/transparencia">Transparencia</a>
+                            <a class="nav-link text-white" href="/prodep">Programa</a>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link text-white" href="/contraloria_social">Contraloria social</a>
                         </li>
                         <li class="nav-item ">
+                            <a class="nav-link text-white" href="/documents">Documentos normativos</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="/informes">Informes trimestrales</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="/quejas">Quejas, denuncias y peticiones</a>
+                        </li>
+{{--                    <li class="nav-item ">
+                            <a class="nav-link text-white" href="/estadisticos">Estadisticos</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="/transparencia">Transparencia</a>
+                        </li>                        
+                        <li class="nav-item ">
                             <a class="nav-link text-white" href="/comision_tecnica">Comisión técnica</a>
                         </li>
+ --}}                    
                     </ul>                        
 
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
-                        @auth
-                        <li class="nav-item">
-                            <a  class="nav-link text-white" href="{{ route('home') }}">Sistema</a>
-                        </li>
-                        @endauth
-                        @guest
+                    <li class="nav-item ">
+                        <a class="nav-link text-white" href="/tramites">Tramites</a>
+                    </li>
+
+                    @can('before',  App\Models\Ca::class)
+                    <li class="nav-item ">
+                        <a class="nav-link text-white" href="/cuerpos">CAs</a>
+                    </li>                            
+                    @endcan
+               
+                    @guest
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{{ route('login') }}">{{ __('auth.Login') }}</a>
                         </li>
@@ -92,8 +107,8 @@
     <br>
     <br>
     <br>
-    <img src="img/prodep.jpg" style="width: 25%;margin-left:  35%;">
-    <img src="img/ittg.png"style="width: 10%; height:10%; margin-left: 2%;">
+    <img src="/img/prodep.jpg" style="width: 25%;margin-left:  35%;">
+    <img src="/img/ittg.png"style="width: 10%; height:10%; margin-left: 2%;">
     <main class="py-4">
         @yield('content')
     </main>
@@ -102,4 +117,5 @@
         © 2020 PRODEP-ITTG
     </footer>        
 </body>
+@yield('code')
 </html>

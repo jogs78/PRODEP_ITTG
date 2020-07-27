@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.public')
 @section('content')
 <!-- Large modal -->
 {{--@can('agregar')--}
@@ -8,26 +8,67 @@
 <table class="table" border="1" id="lista_tramites">  
   <thead>
     <tr style="text-align: center;">
-      <th colspan="3">{{$padre->descripcion}}</th>
+      <th colspan="4">{{$padre->descripcion}}</th>
     </tr>    
     <tr>
       <th>Fecha</th>
       <th>Descripcion</th>
+      <th>Involucrados</th>
+      @can('update',  App\Models\Tramite::class)
       <th>Opciones</th>
+      @endcan
     </tr>
   </thead>
   <tbody>
     @foreach($tramites as $tramite)
-      @can('view', $tramite)
+
       <tr id="{{$tramite->id}}">
         <td class="editable editablef">
           {{$tramite->fecha}}
         </td>   
         <td class="editable editabled">
-          {{$tramite->descripcion}}
+          @if ($tramite->publico())
+            <a href="/evidencias/{{$tramite->id}}">
+              {{$tramite->descripcion}}
+            </a>
+         @else
+            @can('view', $tramite)
+            <a href="/evidencias/{{$tramite->id}}">
+              {{$tramite->descripcion}}
+            </a>
+            @else 
+            <a href="#">
+              {{$tramite->descripcion}}
+            </a>
+            @endcan
+          @endif
         </td>
+        <td>
+          @if ($tramite->publico())
+              Marcado como público.
+          @else
+            Usuarios permitdos:
+            <ul>
+            @forelse ($tramite->permitidos() as $permitido)
+                <li>{{$permitido->nombre}}
+            @empty
+                <li>NO SE HA ESTABLECIDO</li>
+            @endforelse
+            </ul>
+            Cuerpos académicos permitdos:
+            <ul>
+            @forelse ($tramite->permitidosca() as $permitido)
+                <li>{{$permitido->nombre}}
+            @empty
+                <li>NO SE HA ESTABLECIDO</li>
+            @endforelse
+            </ul>
+              
+          @endif
+
+        </td>
+        @can('update',  App\Models\Tramite::class)
         <td class="opciones">
-          <a href="/evidencias/{{$tramite->id}}" class="btn btn-primary">Evidencias</a>
           @can('delete', $tramite)
           <button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>             
           @endcan
@@ -47,9 +88,11 @@
               </div>
             @endif
           @endcan
-        </td>  
+        </td>
+        @endcan
+  
+
       </tr> 
-      @endcan
     @endforeach
   </tbody>
 </table>

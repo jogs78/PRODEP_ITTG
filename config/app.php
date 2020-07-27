@@ -175,7 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-	Barryvdh\Debugbar\ServiceProvider::class,
+//  lo hace aun cuando lo comento	Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 
@@ -228,10 +228,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-
-	'Debugbar' => Barryvdh\Debugbar\Facade::class,
-
+	    // lo hace de todos modos 'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
-
+//composer require barryvdh/laravel-debugbar --dev
 ];

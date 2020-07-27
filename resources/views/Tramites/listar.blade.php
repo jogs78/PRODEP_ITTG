@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.public')
 @section('content')
 <br>
 En el año <select name="year" id="year" onchange="if (this.value) window.location.href=this.value">
@@ -13,8 +13,10 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
       </tr>    
       <tr>                
         <th>Fecha</th>               
-        <th>Descripcion</th>               
+        <th>Descripcion</th>  
+        @can('update',  App\Models\Tramite::class)
         <th>Acción</th>
+        @endcan
       </tr>
     </thead>
     <tbody>
@@ -24,14 +26,16 @@ En el año <select name="year" id="year" onchange="if (this.value) window.locati
           {{$tramite->fecha}}    
         </td>
         <td class="editable editabled">
-          {{$tramite->descripcion}}
+          <a href="/subtramites/{{$tramite->id}}">
+            {{$tramite->descripcion}}
+          </a> 
         </td>
-        <td>
-          <a href="/subtramites/{{$tramite->id}}" class="btn btn-primary">Subtramites</a> 
-          @can('delete', $tramite)
+
+        @can('delete', $tramite)
+        <td>          
           <button class="btn btn-danger btn_eliminar_tramite">Eliminar</button>            
-          @endcan
         </td>
+        @endcan
       </tr> 
       @endforeach
 

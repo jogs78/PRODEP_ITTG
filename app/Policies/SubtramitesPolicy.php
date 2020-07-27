@@ -75,9 +75,9 @@ class SubtramitesPolicy
      * @param  \App\Tramite  $tramite
      * @return mixed
      */
-    public function update(User $user, Tramite $tramite)
+    public function update(User $user)
     {
-        //
+        if ($user->rol == "RIP") return true;
     }
 
     /**

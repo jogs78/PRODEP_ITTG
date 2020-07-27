@@ -8,8 +8,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-
     <script src="/js/popper.js"></script>
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -116,8 +114,6 @@
 <footer class="page-footer bg-dark text-white text-center justify-content-center fixed-bottom">
     © 2020 PRODEP-ITTG
 </footer>
-
-
 </body>
 @yield('code')
 </html>
