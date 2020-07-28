@@ -8,12 +8,12 @@
 <ul>
     <li>Documentos normativos</li>
     <ul>
-        <li>Lineamientos</li>
-        <li>Esquema de Contraloría Social 2020</li>
-        <li>Programa Anual de Trabajo de Contraloría Social “PATCS” 2020</li>
-        <hr>
+        <li><a href="/docs/lineamientos.pdf" target="_blank">Lineamientos</a></li>
+        <li><a href="/docs/esquema.pdf" target="_blank">Esquema de Contraloría Social 2020</a></li>
+        <li><a href="/docs/patcs.pdf" target="_blank">Programa Anual de Trabajo de Contraloría Social “PATCS” 2020</a></li>
+        <li><a href="/docs/guia.pdf" target="_blank">Guía Operativa Contraloria Social 2020.pdf</a></li>
     </ul>
-
+    <hr>
     <li>Formatos de la Guía Operativa</li>
         <ul>
             <li>FORMATO 2 “PITCS” 2020</li>

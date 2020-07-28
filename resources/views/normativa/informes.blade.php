@@ -5,6 +5,7 @@
         INFORMES TRIMESTRALES
     </div>
     <div class="card-body">
+        <p> Dentro de cada tramite es posible encontrar la información </p>
     </div>
 </div>
 @endsection
