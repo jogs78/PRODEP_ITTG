@@ -100,9 +100,8 @@ $().ready(function(){
     .then(function (response) {
       linea  ='<tr id="' + response.data.id + '"  >';
       linea +='<td class="editable editablef">' + response.data.fecha + '</td>';
-      linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
+      linea +='<td class="editable editabled"><a href="/subtramites/' + response.data.id + '">' + response.data.descripcion + '</a></td>';
       linea +='<td>';
-      linea +='<a href="/subtramites/' + response.data.id + '" class="btn btn-primary">Subtramites</a> ';
       linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
       linea +='</td>';
 
