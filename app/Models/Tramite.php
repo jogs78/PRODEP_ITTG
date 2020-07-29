@@ -34,7 +34,7 @@ class Tramite extends Model
 //        $sql = "SELECT users.id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as nombre, 'App\\\\Models\\\\Beneficiario' as concesionario_type , IF( ISNULL(concesionado_id)=1,'','checked') as checked FROM (select * from concesiones where concesionado_type like '%Tramite' and concesionado_id = " . $this->id . " ) L RIGHT JOIN users on L.user_id = users.id  WHERE users.name like '%" . $nombre . "%' AND users.apellido_paterno like '%" . $apat . "%' AND users.apellido_materno like '%" . $amat . "%' order by nombre";
         $campos1 = " users.id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as nombre, 'App\\\\Models\\\\Beneficiario' as concesionario_type , IF( ISNULL(concesionado_id)=1,'','checked') as checked ";
         $subL =  "select * from concesiones where concesionado_type like '%Tramite' and concesionario_type like '%Beneficiario' and concesionado_id = " . $this->id ;
-        $filtro ="users.name like '%" . $nombre . "%' AND users.apellido_paterno like '%" . $apat . "%' AND users.apellido_materno like '%" . $amat . "%'";
+        $filtro ="users.name like '%" . $nombre . "%' AND users.apellido_paterno like '%" . $apat . "%' AND users.apellido_materno like '%" . $amat . "%'  and users.rol = 'BENEFICIARIO' ";
         $sql1  = "SELECT $campos1 FROM ( $subL ) L RIGHT JOIN users on L.concesionario_id = users.id  WHERE $filtro order by nombre";
 
         $a = DB::select(DB::raw($sql1));
@@ -52,7 +52,7 @@ class Tramite extends Model
     public function permitidos(){
         $campos1 = "id, CONCAT(apellido_paterno, ' ', apellido_materno, ', ', name) as nombre ";
         $subQ = "select concesionario_id from concesiones where concesionado_type like '%Tramite' and concesionario_type like '%Beneficiario' and concesionado_id = " . $this->id ;
-        $sql = "SELECT $campos1 FROM users WHERE id in ( $subQ ) order by nombre";
+        $sql = "SELECT $campos1 FROM users WHERE id in ( $subQ ) and rol = 'BENEFICIARIO' order by nombre";
         $a = DB::select(DB::raw($sql));
         return $a;
     }
