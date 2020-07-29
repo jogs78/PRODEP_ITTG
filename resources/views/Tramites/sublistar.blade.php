@@ -105,7 +105,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">LISTA DE ESTUDIANTES</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">SUB TRAMITES</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           </div>
           <div class="modal-body">
@@ -247,7 +247,7 @@ $().ready(function(){
         }
         
 
-          axios.post('/subtramites/'  , {
+          axios.post('/subtramites'  , {
                                       _token:  '{{ csrf_token() }}',
                                       fecha: $("#fecha").val(),
                                       descripcion: $("#descripcion").val(),
