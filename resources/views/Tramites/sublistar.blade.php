@@ -291,9 +291,7 @@ $().ready(function(){
                                 concesionado_id: this.id,
                               })
     .then(function (response) {
-      linea  ='<a href="/evidencias/' + response.data.concesionado_id + '" class="btn btn-primary">Evidencias</a> ';
-      linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
-
+      linea ='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
       linea +='<div class="btn-group">';
       linea +='  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Permisos</button>';
       linea +='<div class="dropdown-menu">';
@@ -301,6 +299,7 @@ $().ready(function(){
       linea +='<a class="dropdown-item publicar" id="' + response.data.concesionado_id + '" href="#">Tramite Público</a>';
       linea +='</div>';
       linea +='</div>';
+
 
       lopciones = $('#lista_tramites > tbody > tr#' + response.data.concesionado_id + ' > td.opciones');
       $('#lista_tramites > tbody > tr#' + response.data.concesionado_id + ' > td.opciones').html(linea);
@@ -410,7 +409,7 @@ $().ready(function(){
           axios.put('/subtramites/' + this.parentElement.id  , params )
           .then(function (response) {
             $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editablef').text(response.data.fecha);
-            $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editabled').text(response.data.descripcion);
+            $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editabled').text('<a href="/evidencias/' + response.data.id + '">' + response.data.descripcion + '</a>');
             console.log(response);
           })
           .catch(function (error) {

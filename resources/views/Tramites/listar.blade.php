@@ -170,16 +170,8 @@ $().ready(function(){
 
           axios.put('/tramites/' + this.parentElement.id  , params )
           .then(function (response) {
-            linea  ='';
-            linea +='<td class="editable editablef">' + response.data.fecha + '</td>';
-            linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
-            linea +='<td>';
-            linea +='<a href="/subtramites/' + response.data.id + '" class="btn btn-primary">Subtramites</a> ';
-            linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
-            linea +='</td>';
-            linea +='';
-//            $('#lista_tramites > tbody > tr#' + id ).remove();
-            $('#lista_tramites > tbody > tr#' + response.data.id).html(linea);
+            $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editablef').text(response.data.fecha);
+            $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editabled').text('<a href="/subtramites/' + response.data.id + '">' + response.data.descripcion + '</a>');
             console.log(response);
           })
           .catch(function (error) {
