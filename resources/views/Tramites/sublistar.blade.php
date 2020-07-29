@@ -257,6 +257,7 @@ $().ready(function(){
             linea  ='<tr id="' + response.data.id + '"  >';
             linea +='<td class="editable editablef">' + response.data.fecha + '</td>';
             linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
+            linea +='<td></td>';
             linea +='<td class="opciones">';
             linea +='<a href="/evidencias/' + response.data.id + '" class="btn btn-primary">Evidencias</a> ';
             linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
