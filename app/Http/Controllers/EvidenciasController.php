@@ -151,9 +151,13 @@ class EvidenciasController extends Controller
             $content = "application/pdf";
         }
           //,".JPG",".png",".PNG",".gif",".GIF",".jpeg",".JPEG"] 
-          if(strpos ( $evidencia->documento , ".jpg" ) ) {
+
+        if(strpos ( $evidencia->documento , ".JPG" ) ) {
             $content = "image/jpeg";
-          }
+        }
+        if(strpos ( $evidencia->documento , ".jpg" ) ) {
+            $content = "image/jpeg";
+        }
           return response()->make(file_get_contents($url), 200, [
             'Content-Type' => $content,
             'Content-Disposition' => 'inline; filename="'.$url.'"'
