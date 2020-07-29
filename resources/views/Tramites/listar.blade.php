@@ -92,7 +92,7 @@ $().ready(function(){
       alert("Falta especificar una descripcion");
       return;
     }
-    axios.post('/tramites/'  , {
+    axios.post('/tramites'  , {
                                 _token:  '{{ csrf_token() }}',
                                 fecha: $("#fecha").val(),
                                 descripcion: $("#descripcion").val(),
