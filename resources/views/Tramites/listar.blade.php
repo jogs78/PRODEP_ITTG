@@ -171,7 +171,7 @@ $().ready(function(){
           axios.put('/tramites/' + this.parentElement.id  , params )
           .then(function (response) {
             $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editablef').text(response.data.fecha);
-            $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editabled').text('<a href="/subtramites/' + response.data.id + '">' + response.data.descripcion + '</a>');
+            $('#lista_tramites > tbody > tr#' + response.data.id + ' > td.editabled').html('<a href="/subtramites/' + response.data.id + '">' + response.data.descripcion + '</a>');
             console.log(response);
           })
           .catch(function (error) {
