@@ -21,8 +21,6 @@ class Ca extends Model
         return $a;
     }
 
-    
-
 /*
     public function user(){
         return $this->belongsTo('App\User');

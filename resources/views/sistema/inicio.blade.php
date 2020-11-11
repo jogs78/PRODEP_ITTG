@@ -14,6 +14,21 @@
 
 <div class="card">
     <div class="card-header text-center">
+        Datos actualizados
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-center">
+            <br>
+             
+            <input type="image" class="img-thumbnail" src="img/cuadro.jpg">
+                
+        </div>
+   </div>
+</div>    
+
+
+<div class="card">
+    <div class="card-header text-center">
         Consulte el manual de usuario
     </div>
     <div class="card-body">
