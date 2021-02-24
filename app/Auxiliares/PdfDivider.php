@@ -110,7 +110,7 @@ class PdfDivider
         for($destinatarios=1; $destinatarios<=$this->cuantos_destinatarios; $destinatarios++ ){
             $nombre_nuevo_archivo = $this->prefijo . "_" . sprintf("%'02d", $contador++) . ".pdf";
             $nuevo_pdf=new FPDI();
- //           $viejo_pdf=new FPDI(); 
+ //           $viejo_pdf=new FPDI(); ...
 
             for($pagina_dest = 1; $pagina_dest <= $this->paginas_cada_uno; $pagina_dest++){
 //                $nuevo_pdf->AddPage();
