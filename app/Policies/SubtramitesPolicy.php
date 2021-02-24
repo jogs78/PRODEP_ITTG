@@ -42,7 +42,7 @@ class SubtramitesPolicy
         $usuario_puede = Concesion::where('concesionario_id', '=', $user->id)->where('concesionario_type', '=', "App\Models\Beneficiario")->where('concesionado_type', '=', "App\Models\Tramite")->where('concesionado_id', '=', $tramite->id )->exists();
         if($usuario_puede)return true;
         //como miembro de ca
-        if($user->ca->id)
+        if($user->ca)
             return Concesion::where('concesionario_id', '=', $user->ca->id)->where('concesionario_type', '=', "App\Models\Ca")->where('concesionado_type', '=', "App\Models\Tramite")->where('concesionado_id', '=', $tramite->id )->exists();
      } 
     }
