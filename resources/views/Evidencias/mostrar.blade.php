@@ -111,7 +111,7 @@
               <input type="hidden" name="origen" id="origen" value="{{$subtramite->id}}">
               <div class="row">
                 <div class="form-group col-12">
-                  Documento: <input class="form-control"  type="file" name="documento" id="documento">
+                  Documento: <input class="form-control"  type="file" name="documento" id="documento" accept="application/pdf,image/tiff,image/webp,image/gif,image/jpeg" >
                 </div>
               </div>
               <div class="row">
@@ -150,7 +150,7 @@
                 <input type="hidden" name="origen" id="origen" value="{{$subtramite->id}}">
                 <div class="row">
                   <div class="form-group col-12">
-                    Documento: <input class="form-control"  type="file" name="documento2" id="documento2">
+                    Documento: <input class="form-control"  type="file" name="documento2" id="documento2" accept="application/pdf,image/tiff,image/webp,image/gif,image/jpeg">
                   </div>
                 </div>
                 <div class="row">

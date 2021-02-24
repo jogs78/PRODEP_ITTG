@@ -93,22 +93,33 @@ class PdfDivider
             $nombre_nuevo_archivo = $this->prefijo . "_" . sprintf("%'02d", $contador++) . "_oficio.pdf";
             $nuevo_pdf=new FPDI();
             for($paginas_usadas=1; $paginas_usadas<=$this->paginas_oficio; $paginas_usadas++){
-                $nuevo_pdf->AddPage();
+//                $nuevo_pdf->AddPage();
                 $nuevo_pdf->setSourceFile($this->documento_tmp);
                 $tplIdx = $nuevo_pdf->importPage($paginas_usadas);
+
+                $size = $nuevo_pdf->getTemplateSize($tplIdx);
+                $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L');
+                
                 $nuevo_pdf->useTemplate($tplIdx);
             }
             $nuevo_pdf->Output( Storage::disk('local')->path('/') . $this->folder. '/' . $nombre_nuevo_archivo, "F");    
             $nuevo_pdf->Close();
             array_push($this->names, $nombre_nuevo_archivo);
         }
+
         for($destinatarios=1; $destinatarios<=$this->cuantos_destinatarios; $destinatarios++ ){
             $nombre_nuevo_archivo = $this->prefijo . "_" . sprintf("%'02d", $contador++) . ".pdf";
-            $nuevo_pdf=new FPDI();    
+            $nuevo_pdf=new FPDI();
+ //           $viejo_pdf=new FPDI(); 
+
             for($pagina_dest = 1; $pagina_dest <= $this->paginas_cada_uno; $pagina_dest++){
-                $nuevo_pdf->AddPage();
+//                $nuevo_pdf->AddPage();
                 $nuevo_pdf->setSourceFile($this->documento_tmp);
                 $tplIdx = $nuevo_pdf->importPage($paginas_usadas++);
+
+                $size = $nuevo_pdf->getTemplateSize($tplIdx);
+                $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L');
+
                 $nuevo_pdf->useTemplate($tplIdx);
             }
             $nuevo_pdf->Output( Storage::disk('local')->path('/') . $this->folder. '/' . $nombre_nuevo_archivo, "F");    
