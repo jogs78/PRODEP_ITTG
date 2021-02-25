@@ -96,10 +96,9 @@ class PdfDivider
 //                $nuevo_pdf->AddPage();
                 $nuevo_pdf->setSourceFile($this->documento_tmp);
                 $tplIdx = $nuevo_pdf->importPage($paginas_usadas);
-
                 $size = $nuevo_pdf->getTemplateSize($tplIdx);
-                $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L');
-                
+
+                $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L', array($size['h'] , $size['w']) );                
                 $nuevo_pdf->useTemplate($tplIdx);
             }
             $nuevo_pdf->Output( Storage::disk('local')->path('/') . $this->folder. '/' . $nombre_nuevo_archivo, "F");    
@@ -118,7 +117,7 @@ class PdfDivider
                 $tplIdx = $nuevo_pdf->importPage($paginas_usadas++);
 
                 $size = $nuevo_pdf->getTemplateSize($tplIdx);
-                $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L');
+                $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L', array($size['h'] , $size['w']));
 
                 $nuevo_pdf->useTemplate($tplIdx);
             }
