@@ -2,7 +2,7 @@
 @section('content')
 <br>
 En el año <select name="year" id="year" onchange="if (this.value) window.location.href=this.value">
-    @for($i=2014;$i<=2020;$i++)
+    @for($i=$min;$i<=$max;$i++)
     <option value="/tramites?page=1&year={{$i}}" @if($year==$i) selected @endif > {{$i}} </option>
     @endfor
 </select>

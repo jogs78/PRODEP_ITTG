@@ -61,7 +61,11 @@ class TramitesController extends Controller
         $request->merge( array( 'year' => $year ) );
         $tramites = Tramite::where('origen', NULL)->where('fecha','>=', "$year-01-01")->where('fecha','<=', "$year-12-31")->orderBy('fecha', 'asc')->paginate(15);//->get();
 //        $tramites = Tramite::paginate(15);//->get();
-        return view('Tramites.listar',compact('tramites','year'));
+        $min = substr (Tramite::min("fecha"), 0 , 4 );
+        $max = substr (Tramite::max("fecha"), 0 , 4 );
+
+
+        return view('Tramites.listar',compact('tramites','year','min','max'));
     }
 
     /**
