@@ -149,7 +149,7 @@ $().ready(function(){
       alert("Falta especificar los datos");
       return;
     }
-    axios.post('/cuerpos/'  , {
+    axios.post('/cuerpos'  , {
                                 _token:  '{{ csrf_token() }}',
                                 clave: $("#clave").val(),
                                 nombre: $("#nombre").val(),
