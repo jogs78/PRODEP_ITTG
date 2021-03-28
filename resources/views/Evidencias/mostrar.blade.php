@@ -93,10 +93,8 @@
       <div class="col">
         <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg2">DIVIDIR Y ASIGNAR EVIDENCIA</button>
       </div>
-    </div>
-    <div class="row">
       <div class="col">
-        <button type="button" class="btn btn-secondary form-control" data-toggle="modal" data-target=".bd-example-modal-lg3">DIVIDIR Y ASIGNAR EVIDENCIAS DISPAREJA</button>
+        <button type="button" class="btn btn-secondary form-control" data-toggle="modal" data-target=".bd-example-modal-lg3">EVIDENCIA DISPAREJA</button>
       </div>
     </div>
   @endcan
