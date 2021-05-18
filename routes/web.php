@@ -90,6 +90,7 @@ Route::post('/evidencias/beneficiarios','EvidenciasController@beneficiarios');
 Route::put('/evidencias/beneficiarios','EvidenciasController@conceder');
 Route::post('/s_evidencias/','EvidenciasController@store');
 Route::post('/s_evidencias2/','EvidenciasController@store2');
+Route::post('/s_evidencias3/','EvidenciasController@store3');
 
 Route::get('/ver/{id_evidencia}','EvidenciasController@show');
 
@@ -106,4 +107,14 @@ Route::resource('cuerpos','CaController');
 
 
 
+Route::get('/Prueba',function(){
+$partes=explode(";","1;2;3");
+$paginas_destinatarios=0;
 
+foreach ($partes as $parte => $cuantas) {
+    echo "add $cuantas";
+    $paginas_destinatarios += $cuantas;
+}
+echo "<br>";
+echo $paginas_destinatarios;
+});

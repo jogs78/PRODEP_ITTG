@@ -150,7 +150,60 @@
               });  
      
         });
+
+            
+        $("#btn_agregar_evidencia3").click(function(event){
+            descripcion = $("#descripcion3").val();
+            if (descripcion==""){
+              alert("Falta especificar una descripcion");
+              return;
+            }
     
+            const formData = new FormData();
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('tramite_id', {{$subtramite->id}});
+            formData.append('descripcion', $("#descripcion3").val());
+            var files = $('#documento3')[0].files[0];
+            formData.append('documento',files);
+    
+            formData.append('tiene_oficio',$('#tiene3').prop('checked'));
+            formData.append('cuantas_el_o',$("#cuantas_oficio3").val());
+            formData.append('rangos',$("#rangos").val());
+    
+            $("#btn_agregar_evidencia3").attr("disabled", true);
+    
+            axios.post('/s_evidencias3'  ,   formData,   { headers: {  'Content-Type': 'multipart/form-data' }  } )
+              .then(function (response) {
+                $('#lista_evidencias  > tbody').html('');
+                for (let i = 0; i < response.data.length; i++) {
+                  linea  ='<tr id="' + response.data[i].id + '"  >';  
+                  linea +='<td><a href="/ver/' + response.data[i].id + '" target="_blank" rel="noopener noreferrer">' + response.data[i].documento + '</a></td>';
+                  linea +='<td class="editable editabled">' + response.data[i].descripcion + '</td>';
+                  linea +='<td>';
+                  linea +='<button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> ';
+                  if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
+    
+                  linea +='</td>';
+                  linea +='</tr>';
+                  $('#lista_evidencias  > tbody').append(linea);
+                  //            $('#lista_estudiantes > tbody > tr#' + id ).remove();
+    
+                  
+                }
+    //            $('.bd-example-modal-lg2').hide();
+                console.log(response);
+              })
+              .catch(function (error) {
+                alert(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+                console.log(error);
+                console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
+              })
+              .then(function () {
+                $('#btn_agregar_evidencia3').attr("disabled", false);
+              });  
+     
+        });
+
     
         $('#tbl-beneficiarios tbody').on("click", ".conceder" , function(){
           var triggered = $(this) // Button that triggered the modal

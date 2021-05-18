@@ -92,15 +92,10 @@ class EvidenciasController extends Controller
             $documento = $file->getRealPath();
             $fileName =  $request->input('descripcion');
 
-/* 
-            validar si existe una evidencia que se llame asi
-            if (! Storage::disk('local')->exists($request->input('tramite_id') . '\\' . $fileName) ) {
-                $path = Storage::putFileAs(
-                    '', $request->file('documento'), $request->input('tramite_id') . '\\' . $fileName
-                );
-            }else return response()->json(["error"=>"El archivo ya existe (" . $fileName . ")"],404) ;
- */
-
+            //validar la existencia del directorio
+            if (! Storage::disk('local')->has($request->input('tramite_id') ) ) {            
+                $path = Storage::makeDirectory($request->input('tramite_id'));
+            }
 
             $pdf = new PdfDivider();
             $pdf->setFolder($request->input('tramite_id'));
@@ -134,6 +129,61 @@ class EvidenciasController extends Controller
             return response()->json(["error"=>"Error ". $e->getMessage()],500) ;
         }
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store3(Request $request)
+    {
+        try {
+
+            $file = $request->file('documento');
+            $documento = $file->getRealPath();
+            $fileName =  $request->input('descripcion');
+
+            //validar la existencia del directorio
+            if (! Storage::disk('local')->has($request->input('tramite_id') ) ) {            
+                $path = Storage::makeDirectory($request->input('tramite_id'));
+            }
+
+            $pdf = new PdfDivider();
+            $pdf->setFolder($request->input('tramite_id'));
+            $pdf->setPrefijo($fileName);
+
+            if($request->input('tiene_oficio') == "true")
+                $pdf->setOficio($request->input('cuantas_el_o'));
+            
+            $pdf->setRangos($request->input('rangos'));
+
+            $pdf->setOrigen($documento);
+
+            $pdf->procesar();
+            
+//            1 oficio de 1
+//            12 reconocmientos de 1 
+            $tramite_id= $request->input('tramite_id');
+            foreach ($pdf->getNames() as $archivo ) {
+                $evidencia = new Evidencia();
+                $evidencia->tramite_id = $tramite_id; 
+                $evidencia->documento = $archivo; 
+                $evidencia->descripcion = $archivo; 
+                $evidencia->save();
+            }
+            $evidencias = Evidencia::where('tramite_id',$tramite_id)->get();
+            $e= $evidencias->toArray();
+//            $e= $pdf->getNames();
+            return response()->json($e,200) ;
+        }catch (\Illuminate\Database\QueryException $e){
+            return response()->json(["error"=>"Error ". $e->getMessage() ],409) ;
+        }catch (\Exception $e){
+            return response()->json(["error"=>"Error ". $e->getMessage() . "En la linea " . $e->getLine() . "del archivo " . $e->getFile() ],500) ;
+        }
+    }
+
+
 
     /**
      * Display the specified resource.

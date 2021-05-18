@@ -19,12 +19,14 @@ class PdfDivider
     protected $cuantos_destinatarios = 0;
     protected $paginas_cada_uno = 1;
     protected $prefijo = "Archivo";
-    protected $paginas_totales;
+
     protected $pdf_origen;
     protected $documento_tmp="";
     protected $path="";
     protected $folder="";
     protected $names = array();
+    protected $rangos = "";
+    protected $partes = array();
 
     /**
      * Create a new controller instance.
@@ -58,19 +60,48 @@ class PdfDivider
         $this->cuantos_destinatarios = $cuantos_destinatarios;
         $this->paginas_cada_uno = $paginas_cada_uno;
     }
+    public function setRangos($rangos){
+        $terminal = $rest = substr($rangos, -1);
+        if ($terminal==";"){
+            $largo = strlen($rangos);
+            $rangos = substr($rangos,0,$largo-1);
+        }
+
+        $this->rangos = $rangos;
+        $this->partes = explode(";", $rangos);
+        
+        //puede que sirva
+        $this->cuantos_destinatarios = count($this->partes);
+
+    }
     public function setOrigen($documento_tmp){
         $this->documento_tmp = $documento_tmp;
     }
 
     public function procesar(){
         $this->pdf_origen = new FPDI();  
-        $this->paginas_totales = $this->pdf_origen->setSourceFile($this->documento_tmp); 
+        $paginas_totales_origen = $this->pdf_origen->setSourceFile($this->documento_tmp); 
         $paginas_en_oficio = $this->tiene_oficio * $this->paginas_oficio;
-        $paginas_destinatarios = $this->cuantos_destinatarios*$this->paginas_cada_uno;
-        if($this->paginas_totales != ( $paginas_en_oficio + $paginas_destinatarios ) ){
-            throw new Exception ("El tamaño del archivo es $this->paginas_totales pero no coincide con ($this->tiene_oficio * $this->paginas_oficio)+ $this->cuantos_destinatarios*$this->paginas_cada_uno");
-            die;
+
+        if($this->rangos!=""){
+            //sifnifica que si es por rangos
+            $paginas_destinatarios=0;
+            foreach ($this->partes as $parte => $cuantas) {
+                $paginas_destinatarios+=$cuantas;
+            }           
+            if($paginas_totales_origen != ( $paginas_en_oficio + $paginas_destinatarios ) ){
+                throw new Exception ("El tamaño del archivo es $paginas_totales_origen pero no coincide con ($this->tiene_oficio * $this->paginas_oficio)+ $this->rangos");
+                die;
+            }    
+        }else{
+            $paginas_destinatarios = $this->cuantos_destinatarios*$this->paginas_cada_uno;
+            if($paginas_totales_origen != ( $paginas_en_oficio + $paginas_destinatarios ) ){
+                throw new Exception ("El tamaño del archivo es $paginas_totales_origen pero no coincide con ($this->tiene_oficio * $this->paginas_oficio)+ $this->cuantos_destinatarios*$this->paginas_cada_uno");
+                die;
+            }    
         }
+
+
 
         if($this->folder == "" ){
             throw new Exception ('No se ha especificado el folder');
@@ -101,30 +132,51 @@ class PdfDivider
                 $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L', array($size['h'] , $size['w']) );                
                 $nuevo_pdf->useTemplate($tplIdx);
             }
-            $nuevo_pdf->Output( Storage::disk('local')->path('/') . $this->folder. '/' . $nombre_nuevo_archivo, "F");    
+            $nuevo_pdf->Output( Storage::disk('local')->path('') . $this->folder. '/' . $nombre_nuevo_archivo, "F");    
             $nuevo_pdf->Close();
             array_push($this->names, $nombre_nuevo_archivo);
         }
 
-        for($destinatarios=1; $destinatarios<=$this->cuantos_destinatarios; $destinatarios++ ){
-            $nombre_nuevo_archivo = $this->prefijo . "_" . sprintf("%'02d", $contador++) . ".pdf";
-            $nuevo_pdf=new FPDI();
- //           $viejo_pdf=new FPDI(); ...
+        if($this->rangos!="")
+            foreach ($this->partes as $parte => $cuantas) {
+                $nombre_nuevo_archivo = $this->prefijo . "_" . sprintf("%'02d", $contador++) . ".pdf";
+                $nuevo_pdf=new FPDI();
+    //           $viejo_pdf=new FPDI(); ...
 
-            for($pagina_dest = 1; $pagina_dest <= $this->paginas_cada_uno; $pagina_dest++){
-//                $nuevo_pdf->AddPage();
-                $nuevo_pdf->setSourceFile($this->documento_tmp);
-                $tplIdx = $nuevo_pdf->importPage($paginas_usadas++);
+                for($pagina_dest = 1; $pagina_dest <= $cuantas; $pagina_dest++){
+    //                $nuevo_pdf->AddPage();
+                    $nuevo_pdf->setSourceFile($this->documento_tmp);
+                    $tplIdx = $nuevo_pdf->importPage($paginas_usadas++);
 
-                $size = $nuevo_pdf->getTemplateSize($tplIdx);
-                $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L', array($size['h'] , $size['w']));
+                    $size = $nuevo_pdf->getTemplateSize($tplIdx);
+                    $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L', array($size['h'] , $size['w']));
 
-                $nuevo_pdf->useTemplate($tplIdx);
+                    $nuevo_pdf->useTemplate($tplIdx);
+                }
+                $nuevo_pdf->Output( Storage::disk('local')->path('') . $this->folder. '/' . $nombre_nuevo_archivo, "F");    
+                $nuevo_pdf->Close();
+                array_push($this->names, $nombre_nuevo_archivo);
+            }           
+        else
+            for($destinatarios=1; $destinatarios<=$this->cuantos_destinatarios; $destinatarios++ ){
+                $nombre_nuevo_archivo = $this->prefijo . "_" . sprintf("%'02d", $contador++) . ".pdf";
+                $nuevo_pdf=new FPDI();
+    //           $viejo_pdf=new FPDI(); ...
+
+                for($pagina_dest = 1; $pagina_dest <= $this->paginas_cada_uno; $pagina_dest++){
+    //                $nuevo_pdf->AddPage();
+                    $nuevo_pdf->setSourceFile($this->documento_tmp);
+                    $tplIdx = $nuevo_pdf->importPage($paginas_usadas++);
+
+                    $size = $nuevo_pdf->getTemplateSize($tplIdx);
+                    $nuevo_pdf->AddPage(($size['h'] > $size['w']) ? 'P' : 'L', array($size['h'] , $size['w']));
+
+                    $nuevo_pdf->useTemplate($tplIdx);
+                }
+                $nuevo_pdf->Output( Storage::disk('local')->path('') . $this->folder. '/' . $nombre_nuevo_archivo, "F");    
+                $nuevo_pdf->Close();
+                array_push($this->names, $nombre_nuevo_archivo);
             }
-            $nuevo_pdf->Output( Storage::disk('local')->path('/') . $this->folder. '/' . $nombre_nuevo_archivo, "F");    
-            $nuevo_pdf->Close();
-            array_push($this->names, $nombre_nuevo_archivo);
-        }
       
     }
     public function getNames(){

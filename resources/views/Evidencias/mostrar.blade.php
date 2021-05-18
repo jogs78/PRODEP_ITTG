@@ -94,12 +94,13 @@
         <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg2">DIVIDIR Y ASIGNAR EVIDENCIA</button>
       </div>
       <div class="col">
-        <button type="button" class="btn btn-secondary form-control" data-toggle="modal" data-target=".bd-example-modal-lg3">EVIDENCIA DISPAREJA</button>
+        <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg3">EVIDENCIA DISPAREJA</button>
       </div>
     </div>
   @endcan
       @include('Evidencias.modal-subir')
       @include('Evidencias.modal-dividir')
+      @include('Evidencias.modal-dividir2')
       @include('Evidencias.modal-beneficiarios')
 @endsection
 @section('code')
