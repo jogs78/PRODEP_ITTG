@@ -1,4 +1,8 @@
 @extends('layouts.public')
+@section('breadcumb')
+  <li class="breadcrumb-item active">{{$padre->descripcion}}</li>
+@endsection
+
 @section('content')
 <!-- Large modal -->
 {{--@can('agregar')--}
@@ -7,9 +11,6 @@
 
 <table class="table" border="1" id="lista_tramites">  
   <thead>
-    <tr style="text-align: center;">
-      <th colspan="4">{{$padre->descripcion}}</th>
-    </tr>    
     <tr>
       <th>Fecha</th>
       <th>Descripcion</th>
@@ -82,7 +83,7 @@
                   Permisos
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" data-tramite-id="{{$tramite->id}}" data-tramite-nombre="{{$tramite->descripcion}}">Beneficiarios</a>
+                  <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal-beneficiarios-tramites" data-tramite-id="{{$tramite->id}}" data-tramite-nombre="{{$tramite->descripcion}}">Beneficiarios</a>
                   <a class="dropdown-item publicar" id="{{$tramite->id}}" href="#">Tramite Público</a>
                 </div>
               </div>
@@ -98,45 +99,13 @@
 </table>
   {{--$tramites->links()--}}
   @can('create', App\Models\Tramite::class)
-  <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg">AGREGAR SUB TRAMITE</button>
+  <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg-subtramite">AGREGAR SUB TRAMITE</button>
+  @include('Tramites.modal-subtramite')
   @endcan
   
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="false"  data-backdrop="static">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">SUB TRAMITES</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          </div>
-          <div class="modal-body">
-            <input type="hidden" name="origen" id="origen" value="{{$padre->id}}">
-
-              <div class="row">
-                <div class="form-group col-12">
-                 Fecha: <input class="form-control"  type="date" name="fecha" id="fecha" value="{{date("Y-m-d")}}">
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-12">
-                 Descripcion: <input class="form-control"  type="text" name="descripcion" id="descripcion" placeholder="Escriba una descripcción">
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-12">
-                  <input class="form-control btn btn-primary" type="button" value="Agregar" id="btn_agregar_tramite">
-                </div>
-              </div>
-
-            </div><!-- modal-body -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
-          </div>
-        </div><!-- modal-content -->
-      </div><!-- modal-dialog -->
-    </div><!-- modal fade -->
 
 <!-- modal de beneficiarios-->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal-beneficiarios-tramites" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -158,7 +127,7 @@
             <input type="text" class="form-control" id="_materno" placeholder="Materno">
           </div>
           <div class="col">
-            <input class="form-control btn btn-primary" id="btnbuscar" type="button" value="Filtrar...">
+            <input class="form-control btn btn-primary" id="btnbuscar-beneficiarios-tramite" type="button" value="Filtrar...">
           </div>
         </div>
         <div class="row">
@@ -193,21 +162,25 @@
     </div><!-- modal-content -->
   </div><!-- modal-dialog -->
 </div><!-- modal fade -->
+
 @endsection
 @section('code')
+
 <script>
 var mostrando_input = false;
-$().ready(function(){
-  $('#exampleModal').on('show.bs.modal', function (event) {
+$().ready(function(){}
+@include('Tramites.script-operaciones-tramites')
+
+  $('#exampleModal-beneficiarios-tramites').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var recipient = button.data('tramite-id') // Extract info from data-* attributes
     var nombret = button.data('tramite-nombre') // Extract info from data-* attributes
     $('#titulo_del_tramite').text( 'Beneficiarios del subtramite:  ' +  nombret)
     $('#tramite_id').val(recipient)
   });
-
-  $("#btnbuscar").click(function(event){
-    $('#btnbuscar').attr("disabled", true);
+  //buscar los beneficiarios del tramite
+  $("#btnbuscar-beneficiarios-tramite").click(function(event){
+    $('#btnbuscar-beneficiarios-tramite').attr("disabled", true);
     axios.post('/subtramites/beneficiarios'  , {
                                 _token:  '{{ csrf_token() }}',
                                 tramite_id: $("#tramite_id").val(),
@@ -233,7 +206,7 @@ $().ready(function(){
       console.log(error.message + '\n' + error.response.data.message + '\n' +  error.response.data.error);
     })
     .then(function () {
-      $('#btnbuscar').attr("disabled", false);
+      $('#btnbuscar-beneficiarios-tramite').attr("disabled", false);
     });
     
   });
@@ -260,11 +233,10 @@ $().ready(function(){
             linea +='<td></td>';
             linea +='<td class="opciones">';
             linea +='<button class="btn btn-danger btn_eliminar_tramite">Eliminar</button> ';
-
             linea +='<div class="btn-group">';
             linea +='  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Permisos</button>';
             linea +='<div class="dropdown-menu">';
-            linea +='<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" data-tramite-id="' + response.data.id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</a>';
+            linea +='<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal-beneficiarios-tramites" data-tramite-id="' + response.data.id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</a>';
             linea +='<a class="dropdown-item publicar" id="' + response.data.id + '" href="#">Tramite Público</a>';
             linea +='</div>';
             linea +='</div>';
@@ -295,7 +267,7 @@ $().ready(function(){
       linea +='<div class="btn-group">';
       linea +='  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Permisos</button>';
       linea +='<div class="dropdown-menu">';
-      linea +='<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" data-tramite-id="' + response.data.concesionado_id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</a>';
+      linea +='<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal-beneficiarios-tramites" data-tramite-id="' + response.data.concesionado_id + '" data-tramite-nombre="' + response.data.descripcion + '">Beneficiarios</a>';
       linea +='<a class="dropdown-item publicar" id="' + response.data.concesionado_id + '" href="#">Tramite Público</a>';
       linea +='</div>';
       linea +='</div>';

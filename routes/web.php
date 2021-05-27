@@ -63,17 +63,29 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+//Route::resource('tramites','TramitesController');
+Route::pattern('id_tramite', '[0-9]+');
+Route::get('tramites','TramitesController@index');
+Route::post('tramites','TramitesController@store');
+Route::put('tramites/{id_tramite}','TramitesController@update');
+Route::delete('tramites/{id_tramite}','TramitesController@destroy');
+
+Route::put('/tramites/privatizar','TramitesController@privatizar');
+Route::put('/tramites/publicar','TramitesController@publicar');
+Route::post('/tramites/beneficiarios','TramitesController@beneficiarios');
+Route::put('/tramites/beneficiarios','TramitesController@conceder');
+
 //Route::post('/tramites/beneficiarios','TramitesController@beneficiarios');
 //Route::put('/tramites/beneficiarios','TramitesController@conceder');
-Route::resource('tramites','TramitesController');
 //Route::get('/tramites', 'TramitesController@listar_tramites');
 
+////Route::put('/subtramites/privatizar','SubtramitesController@privatizar');
+////Route::put('/subtramites/publicar','SubtramitesController@publicar');
+////Route::post('/subtramites/beneficiarios','SubtramitesController@beneficiarios');
+////Route::put('/subtramites/beneficiarios','SubtramitesController@conceder');
 
-Route::put('/subtramites/privatizar','SubtramitesController@privatizar');
-Route::put('/subtramites/publicar','SubtramitesController@publicar');
 
-Route::post('/subtramites/beneficiarios','SubtramitesController@beneficiarios');
-Route::put('/subtramites/beneficiarios','SubtramitesController@conceder');
+
 Route::get('/subtramites/{id_tramite}', 'SubtramitesController@index');
 Route::resource('subtramites','SubtramitesController')->except([
     'index', 'show'

@@ -18,91 +18,95 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>    
-    <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark"  >
-        <div class="container">
-            <a class="navbar-brand  text-white" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('messages.Toggle') }}">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto ">
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/prodep">Programa</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/contraloria_social">Contraloria social</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/documents">Documentos normativos</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/informes">Informes trimestrales</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/quejas">Quejas, denuncias y peticiones</a>
-                        </li>
-{{--                    <li class="nav-item ">
-                            <a class="nav-link text-white" href="/estadisticos">Estadisticos</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/transparencia">Transparencia</a>
-                        </li>                        
-                        <li class="nav-item ">
-                            <a class="nav-link text-white" href="/comision_tecnica">Comisión técnica</a>
-                        </li>
- --}}                    
-                    </ul>                        
-
-
-                <!-- Right Side Of Navbar -->
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item ">
-                        <a class="nav-link text-white" href="/tramites">Tramites</a>
-                    </li>
-
-                    @can('before',  App\Models\Ca::class)
-                    <li class="nav-item ">
-                        <a class="nav-link text-white" href="/cuerpos">CAs</a>
-                    </li>                            
-                    @endcan
-               
-                    @guest
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('login') }}">{{ __('auth.Login') }}</a>
-                        </li>
-                        @if (Route::has('register'))
-                            <li class="nav-item">
-                                <a class="nav-link  text-white" href="{{ route('register') }}">{{ __('auth.Register') }}</a>
+    
+    <div class="fixed-top w-100">
+        <div class="row container">
+            <nav class="navbar navbar-expand-xl navbar-dark bg-dark"  >
+                <div class="container">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <!-- Left Side Of Navbar -->
+                            <ul class="navbar-nav mr-auto ">
+                                <li class="nav-item ">
+                                    <a class="nav-link text-white" href="/prodep">Programa</a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link text-white" href="/contraloria_social">Contraloria social</a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link text-white" href="/documents">Documentos normativos</a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link text-white" href="/informes">Informes trimestrales</a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link text-white" href="/quejas">Quejas, denuncias y peticiones</a>
+                                </li>
+        {{--                    <li class="nav-item ">
+                                    <a class="nav-link text-white" href="/estadisticos">Estadisticos</a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link text-white" href="/transparencia">Transparencia</a>
+                                </li>                        
+                                <li class="nav-item ">
+                                    <a class="nav-link text-white" href="/comision_tecnica">Comisión técnica</a>
+                                </li>
+         --}}                    
+                            </ul>                        
+        
+        
+                        <!-- Right Side Of Navbar -->
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item ">
+                                <a class="nav-link text-white" href="/tramites">Tramites</a>
                             </li>
-                        @endif
-                    @else
-                        <li class="nav-item dropdown ">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                    {{ __('auth.Logout') }}
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    @endguest
-                </ul>
-            </div>
+        
+                            @can('before',  App\Models\Ca::class)
+                            <li class="nav-item ">
+                                <a class="nav-link text-white" href="/cuerpos">CAs</a>
+                            </li>                            
+                            @endcan
+                       
+                            @guest
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" href="{{ route('login') }}">{{ __('auth.Login') }}</a>
+                                </li>
+                                @if (Route::has('register'))
+                                    <li class="nav-item">
+                                        <a class="nav-link  text-white" href="{{ route('register') }}">{{ __('auth.Register') }}</a>
+                                    </li>
+                                @endif
+                            @else
+                                <li class="nav-item dropdown ">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ Auth::user()->name }} <span class="caret"></span>
+                                    </a>
+        
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                            {{ __('auth.Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </li>
+                            @endguest
+                        </ul>
+                    </div>
+                </div>
+            </nav>                
         </div>
-    </nav>
+        <div class="row container">
+            @yield('breadcumb')
+        </div>
+    </div>
+
+
 <div class="container">
+    <br>
+    <br>
     <br>
     <br>
     <br>

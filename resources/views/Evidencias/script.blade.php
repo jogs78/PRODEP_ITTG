@@ -1,21 +1,12 @@
-<script>
-    var mostrando_input = false;
-    @if ($subtramite->publico())
-    var tramite_publico = true;
-    @else
-    var tramite_publico = false;    
-    @endif
     
-    $().ready(function(){
-      $('#exampleModal').on('show.bs.modal', function (event) {
+      $('#exampleModal-evidencia').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget) // Button that triggered the modal
         var recipient = button.data('evidencia-id') // Extract info from data-* attributes
         var subtramite = button.data('subtramite-id') // Extract info from data-* attributes
         var nombret = button.data('evidencia-nombre') // Extract info from data-* attributes
-        $('#titulo_de_la_evidencia').text( 'Beneficiarios con acceso a la evidencia:  ' +  nombret)
+        $('#titulo_de_la_evidencia').text( 'Beneficiarios con acceso:  ' +  nombret)
         $('#evidencia_id').val(recipient)
         $('#subtramite_id').val(subtramite)
-        
       });
       
       $("#tiene").click(function(event){
@@ -23,8 +14,7 @@
         if( ! $('#tiene').prop('checked') ) 
           $('#cuantas_ofi').addClass("invisible")
         else
-          $('#cuantas_ofi').removeClass("invisible")
-    
+          $('#cuantas_ofi').removeClass("invisible")   
        });  
       $("#btnbuscar").click(function(event){
         $('#btnbuscar').attr("disabled", true);
@@ -81,7 +71,7 @@
                 linea +='<td class="editable editabled">' + response.data.descripcion + '</td>';
                 linea +='<td>';
                 linea +='<button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> ';
-                if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
+                if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal-evidencia" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
                 linea +='</td>';
                 linea +='</tr>';
                 $('#lista_evidencias  > tbody').append(linea);
@@ -128,7 +118,7 @@
                   linea +='<td class="editable editabled">' + response.data[i].descripcion + '</td>';
                   linea +='<td>';
                   linea +='<button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> ';
-                  if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
+                  if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal-evidencia" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
     
                   linea +='</td>';
                   linea +='</tr>';
@@ -181,7 +171,7 @@
                   linea +='<td class="editable editabled">' + response.data[i].descripcion + '</td>';
                   linea +='<td>';
                   linea +='<button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> ';
-                  if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
+                  if(!tramite_publico) linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal-evidencia" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
     
                   linea +='</td>';
                   linea +='</tr>';
@@ -274,7 +264,7 @@
                 linea +='<td><a href="/ver/' + response.data.id + '" target="_blank" rel="noopener noreferrer">' +  response.data.documento + '</a></td>';            linea +='<td><a href="/ver/' + response.data.id + '" target="_blank" rel="noopener noreferrer">' +  response.data.documento + '</a></td>';
                 linea +='<td>';
                 linea +='<button class="btn btn-danger btn_eliminar_evidencia">Eliminar</button> ';
-                linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
+                linea +='<button class="btn btn-warning " data-toggle="modal" data-target="#exampleModal-evidencia" data-evidencia-id="' + response.data.id + '" data-evidencia-nombre="' + response.data.descripcion + '">Beneficiarios</button>';
                 linea +='</td>';
                 linea +='';
      *///            $('#lista_evidencias > tbody > tr#' + id ).remove();
@@ -300,5 +290,3 @@
          }catch{}
     
         });
-    });
-    </script>

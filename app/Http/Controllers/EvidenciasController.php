@@ -20,9 +20,19 @@ class EvidenciasController extends Controller
      */
     public function index($id_tramite)
     {
+
+        $traza = array();
+
+        
         $subtramite = Tramite::find($id_tramite);
+        
+        $actual = $subtramite;
+        do {
+            array_push($traza, [$actual->descripcion,$actual->id]);
+        } while ($actual = $actual->padre);
+        $inverso = array_reverse($traza);         
         $tramite = Tramite::find($subtramite->origen);
-        return view('Evidencias.mostrar',compact('tramite','subtramite'));
+        return view('Evidencias.mostrar',compact('tramite','subtramite','inverso'));
     }
 
     /**
@@ -196,6 +206,10 @@ class EvidenciasController extends Controller
         $evidencia =  Evidencia::find($id);
         $tramite_id = $evidencia->tramite_id;
         $url =Storage::disk('local')->path('') . "$tramite_id/" .$evidencia->documento;
+
+        if(strpos($evidencia->documento , ".PDF"  ) ){
+            $content = "application/pdf";
+        }
 
         if(strpos($evidencia->documento , ".pdf"  ) ){
             $content = "application/pdf";
