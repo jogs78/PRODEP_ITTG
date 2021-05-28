@@ -5,14 +5,15 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/tramites">Tramites</a></li>
     @foreach ($inverso as $paso)
-    <li class="breadcrumb-item"><a href="{{$paso[1]}}">{{$paso[0]}}</a></li>      
+      @if ($loop->last)
+        <li class="breadcrumb-item active">{{$paso[0]}}</li>       
+      @else        
+        <li class="breadcrumb-item"><a href="{{$paso[1]}}">{{$paso[0]}}</a></li>      
+      @endif
     @endforeach
 {{--
-    <li class="breadcrumb-item"><a href="#">Library</a></li>
-    <li class="breadcrumb-item"><a href="#">Library</a></li>
-    <li class="breadcrumb-item"><a href="#">Library</a></li>
-    <li class="breadcrumb-item"><a href="#">Library</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Data</li>
+  <li class="breadcrumb-item"><a href="#">Library</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Data</li>
 --}}                  
   </ol>
 </nav>
@@ -40,12 +41,12 @@
   </button>
 </div>
 
- 
+@can('create', App\Models\Tramite::class)
+<button type="button" class="btn btn-primary form-control" data-toggle="modal"  data-tramite-id="{{$subtramite->id}}" data-tramite-nombre="{{$subtramite->descripcion}}"  data-target="#bd-example-modal-lg-tramite" id="matricular">AGREGAR TRAMITE</button>
+@include('Tramites.modal-tramite')
+@endcan
       <table class="table" border="1" id="lista_tramites">  
         <thead>
-          <tr style="text-align: center;">
-            <th colspan="4">{{--$tramite->padre->descripcion--}}</th>
-          </tr>    
           <tr>
             <th>Fecha</th>
             <th>Descripcion</th>
@@ -81,7 +82,7 @@
               <td>
                 @if ($tramite->publico())
                     Marcado como público.
-                @else
+                  @else
                   Usuarios permitdos:
                   <ul>
                   @forelse ($tramite->permitidos() as $permitido)
@@ -99,7 +100,6 @@
                   @endforelse
                   </ul>
                 @endif
-      
               </td>
               @can('update',  App\Models\Tramite::class)
               <td class="opciones">
@@ -118,27 +118,30 @@
                       </div>
                     </div>
                 @endcan
-
-                      
               </td>
               @endcan
             </tr> 
           @endforeach
         </tbody>
       </table>
+<br>
 
-      @can('create', App\Models\Tramite::class)
-      <button type="button" class="btn btn-primary form-control" data-toggle="modal"  data-tramite-id="{{$subtramite->id}}" data-tramite-nombre="{{$subtramite->descripcion}}"  data-target="#bd-example-modal-lg-tramite" id="matricular">AGREGAR TRAMITE</button>
-      @include('Tramites.modal-tramite')
-      @endcan
-      
-      ---------
+@can('create', App\Models\Evidencia::class)
+<div class="row">
+  <div class="col">
+    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg">AGREGAR EVIDENCIA</button>
+  </div>
+  <div class="col">
+    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg2">DIVIDIR Y ASIGNAR EVIDENCIA</button>
+  </div>
+  <div class="col">
+    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg3">EVIDENCIA DISPAREJA</button>
+  </div>
+</div>
+@endcan
 
 <table class="table" border="1" id="lista_evidencias">  
   <thead>      
-      <tr style="text-align: center;">
-        <th colspan="3">Evidencias: <a href="/subtramites/{{$tramite->id}}">{{$tramite->descripcion}}</a>>{{$subtramite->descripcion}}</th>
-      </tr>    
       <tr>                
         <th>Documento</th>
         <th>Descripcion</th>
@@ -194,21 +197,6 @@
       @endforeach
     </tbody>
   </table> 
-
-
-  @can('create', App\Models\Evidencia::class)
-    <div class="row">
-      <div class="col">
-        <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg">AGREGAR EVIDENCIA</button>
-      </div>
-      <div class="col">
-        <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg2">DIVIDIR Y ASIGNAR EVIDENCIA</button>
-      </div>
-      <div class="col">
-        <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg3">EVIDENCIA DISPAREJA</button>
-      </div>
-    </div>
-  @endcan
 
       @include('Evidencias.modal-subir')
       @include('Evidencias.modal-dividir')
