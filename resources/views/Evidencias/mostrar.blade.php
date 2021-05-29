@@ -129,13 +129,19 @@
 @can('create', App\Models\Evidencia::class)
 <div class="row">
   <div class="col">
-    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg">AGREGAR EVIDENCIA</button>
+    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg" >
+      AGREGAR EVIDENCIA - UN ARCHIVO CUALQUIERA
+     </button>
   </div>
   <div class="col">
-    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg2">DIVIDIR Y ASIGNAR EVIDENCIA</button>
+    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg2">
+      DIVIDIR Y ASIGNAR PDF - VARIAS PERSONAS
+      </button>
   </div>
   <div class="col">
-    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg3">EVIDENCIA DISPAREJA</button>
+    <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target=".bd-example-modal-lg3">
+      PDF VARIOS PERO DISPAREJOS
+    </button>
   </div>
 </div>
 @endcan

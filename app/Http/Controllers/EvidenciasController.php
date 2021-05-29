@@ -206,7 +206,8 @@ class EvidenciasController extends Controller
         $evidencia =  Evidencia::find($id);
         $tramite_id = $evidencia->tramite_id;
         $url =Storage::disk('local')->path('') . "$tramite_id/" .$evidencia->documento;
-
+        $content = "application/octet-stream";
+        
         if(strpos($evidencia->documento , ".PDF"  ) ){
             $content = "application/pdf";
         }
