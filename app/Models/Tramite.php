@@ -12,7 +12,7 @@ class Tramite extends Model
     protected $fillable = [
         'fecha', 'descripcion', 'origen'
      ];
-    //
+
     
     public function padre(){
         return $this->hasOne('App\Models\Tramite','id','origen');
