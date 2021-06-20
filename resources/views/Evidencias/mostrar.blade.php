@@ -3,12 +3,16 @@
 @section('breadcumb')
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/tramites">Tramites</a></li>
     @foreach ($inverso as $paso)
-      @if ($loop->last)
-        <li class="breadcrumb-item active">{{$paso[0]}}</li>       
+      @if ($loop->first)
+        <li class="breadcrumb-item"><a href="/tramites">{{$paso[0]}}</a></li>      
       @else        
-        <li class="breadcrumb-item"><a href="{{$paso[1]}}">{{$paso[0]}}</a></li>      
+        @if ($loop->last)
+          <li class="breadcrumb-item active">{{$paso[0]}}</li>       
+        @else        
+          <li class="breadcrumb-item"><a href="{{$paso[1]}}">{{$paso[0]}}</a></li>      
+        @endif
+
       @endif
     @endforeach
 {{--

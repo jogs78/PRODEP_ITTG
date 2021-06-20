@@ -29,7 +29,9 @@ class EvidenciasController extends Controller
         $actual = $subtramite;
         do {
             array_push($traza, [$actual->descripcion,$actual->id]);
+            $last = $actual;
         } while ($actual = $actual->padre);
+//        array_push($traza, [$last->descripcion,$last->id]);        
         $inverso = array_reverse($traza);         
         $tramite = Tramite::find($subtramite->origen);
         return view('Evidencias.mostrar',compact('tramite','subtramite','inverso'));
